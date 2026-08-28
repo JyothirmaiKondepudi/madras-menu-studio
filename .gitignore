@@ -1,0 +1,26 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Next.js
+.next/
+out/
+
+# Environment / secrets
+.env
+.env.local
+.env*.local
+
+# Prisma
+prisma/dev.db
+
+# Python (ETL pipeline)
+__pycache__/
+*.pyc
+extracted/
+seed/
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
