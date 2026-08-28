@@ -1,26 +1,41 @@
-# Node
-node_modules/
-npm-debug.log*
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Next.js
-.next/
-out/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Environment / secrets
-.env
-.env.local
-.env*.local
+# testing
+/coverage
 
-# Prisma
-prisma/dev.db
+# next.js
+/.next/
+/out/
 
-# Python (ETL pipeline)
-__pycache__/
-*.pyc
-extracted/
-seed/
+# production
+/build
 
-# OS/editor cruft
+# misc
 .DS_Store
-Thumbs.db
-.vscode/
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
