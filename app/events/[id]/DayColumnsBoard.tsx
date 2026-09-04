@@ -186,7 +186,6 @@ export default function DayColumnsBoard({
           dayNumber={openDay}
           cuisineProfiles={cuisineProfiles}
           priceTiers={priceTiers}
-          availableCuisineTags={availableCuisineTags}
           nextSequenceOrder={nextSequenceOrder}
           onClose={() => setOpenDay(null)}
         />
