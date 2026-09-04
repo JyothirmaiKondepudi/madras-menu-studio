@@ -1,0 +1,11 @@
+[
+  {"name": "Tandoori Grill Station", "region": "north_indian", "veg_nonveg": "both", "price_per_person": 8.00, "equipment_needed": ["tandoor_oven", "propane_burner"]},
+  {"name": "Dosa & Uttapam Station", "region": "south_indian", "veg_nonveg": "veg", "price_per_person": 6.00, "equipment_needed": ["flat_griddle", "propane_burner"]},
+  {"name": "Biryani Bar", "region": "kerala", "veg_nonveg": "both", "price_per_person": 9.00, "equipment_needed": ["dum_pot", "sterno_chafers"]},
+  {"name": "Kati Roll Station", "region": "north_indian", "veg_nonveg": "both", "price_per_person": 7.00, "equipment_needed": ["flat_griddle", "propane_burner"]},
+  {"name": "Chaat Station", "region": "north_indian", "veg_nonveg": "veg", "price_per_person": 5.00, "equipment_needed": ["display_table", "condiment_bar"]},
+  {"name": "Live Pasta Station", "region": "italian", "veg_nonveg": "both", "price_per_person": 7.00, "equipment_needed": ["sauté_burner", "pasta_boiler"]},
+  {"name": "Taco & Quesadilla Station", "region": "mexican", "veg_nonveg": "both", "price_per_person": 6.50, "equipment_needed": ["flat_griddle", "propane_burner"]},
+  {"name": "Sushi Display Station", "region": "sushi", "veg_nonveg": "both", "price_per_person": 12.00, "equipment_needed": ["ice_display", "chilled_case"]},
+  {"name": "Kulfi Falooda Flambé Station", "region": "north_indian", "veg_nonveg": "veg", "price_per_person": 6.00, "equipment_needed": ["flambé_cart", "chilled_case"]}
+]

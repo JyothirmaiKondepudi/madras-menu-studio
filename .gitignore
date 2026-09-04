@@ -39,3 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+.env*
+node_modules/
+dist/
+.env
+
+/src/generated/prisma
+
+# ETL pipeline (menu_etl_pipeline.py) intermediate/output data and its venv
+/extracted
+/seed
+/etl-env
+
+# Raw source documents (proprietary business content, unzipped locally)
+/menus-source

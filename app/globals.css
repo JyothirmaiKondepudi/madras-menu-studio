@@ -1,8 +1,37 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------
+   Madras Menu Studio theme, v4 — deep aubergine/plum background, gold-
+   orange accent, warm cream text, Space Grotesk (a sharp geometric
+   display sans, not a serif) for major headings at a moderate weight —
+   an earlier heavier serif read as dated/bold-feeling even at a nominal
+   non-bold weight. Dark surfaces can't rely on shadow-for-elevation the
+   way a light theme can
+   (a dark shadow on a dark page is invisible) — cards are defined by a
+   faint light border + a soft ambient glow instead, brightening into a
+   gold glow on hover for the "floating, dynamic" feel.
+   --------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #1a1023;
+  --color-bg-alt: #221530;
+  --color-card: #2a1a38;
+  --color-card-hover: #33203f;
+  --color-text: #f5ede4;
+  --color-text-muted: #b3a3bf;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-gold: #eda022;
+  --color-gold-light: #ffc857;
+  --color-veg: #3fae4a;
+  --color-nonveg: #d64545;
+  --color-warning-bg: rgba(237, 160, 34, 0.12);
+  --color-warning-text: #ffc857;
+  --color-warning-border: rgba(237, 160, 34, 0.3);
+
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+
+  --glow-flat: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--color-border) inset;
+  --glow-raised: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(237, 160, 34, 0.18);
 }
 
 @theme inline {
@@ -12,15 +41,834 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { font-size: 16px; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, "Segoe UI", Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  color: var(--color-text);
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+h1 { font-size: 1.9rem; }
+h2 {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-top: 2.5rem;
+  font-weight: 600;
+}
+
+a {
+  color: var(--color-gold-light);
+  text-decoration: none;
+}
+a:hover { color: var(--color-gold); }
+
+/* --- Site chrome --- */
+.site-accent-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+}
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 2rem;
+  background: var(--color-bg-alt);
+  box-shadow: var(--glow-flat);
+  position: relative;
+  z-index: 1;
+}
+.site-brand {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.site-brand-mark { color: var(--color-gold); }
+.site-tagline {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  flex: 1;
+}
+.site-auth {
+  display: flex;
+  gap: 0.6rem;
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  box-shadow: none;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: none;
+  box-shadow: none;
+}
+.btn-danger {
+  border-color: var(--color-nonveg);
+  color: var(--color-nonveg);
+}
+.btn-danger:hover {
+  background: rgba(214, 69, 69, 0.12);
+}
+
+.site-body {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.25rem 2rem;
+  animation: rise-in 0.25s ease both;
+}
+
+/* Opacity-only on purpose — a transform here (even translateY(0) at rest)
+   makes .site-body a "containing block" for any position:fixed descendant
+   (per the CSS spec), which silently confined the AddOccasionModal overlay
+   to this element's 1100px width instead of the full viewport. That's what
+   was actually causing the "seam" at the content-column edge — not a blur
+   artifact, the modal's dark backdrop genuinely didn't extend past it. */
+@keyframes rise-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- Form controls --- */
+input, select, textarea {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  /* Modern UI text runs smaller than the page default (13-14px is the
+     current norm for controls, not 16px+) — this was sized like body
+     copy, which read as oversized in the dropdown lists especially. */
+  font-size: 0.875rem;
+}
+input::placeholder { color: var(--color-text-muted); opacity: 0.7; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(237, 160, 34, 0.18);
+}
+select option { background: var(--color-bg-alt); color: var(--color-text); }
+
+/* --- CustomSelect: replaces native <select> everywhere (see the
+   component's own comment for why — Windows Chrome ignores page CSS for
+   a native select's open option list entirely). --- */
+.custom-select {
+  position: relative;
+}
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-align: left;
+  box-shadow: none;
+}
+/* Truncate long labels (e.g. a full price-tier description) instead of
+   wrapping — wrapped text grew that trigger to 3 lines tall, throwing off
+   row heights for every other field sharing its .field-grid row. */
+.custom-select-trigger span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.custom-select-trigger:hover {
+  background: var(--color-bg-alt);
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+.custom-select-arrow {
+  color: var(--color-text-muted);
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+/* position:fixed + top/left/width come from JS (the trigger's real
+   screen coordinates) now that this renders through a portal into
+   document.body — a plain absolute position here would still be a child
+   of .custom-select in the DOM despite the portal target being visual
+   only... no: once portaled, it's a true DOM child of body, so this is
+   just the box's own look, not its placement. z-index above the modal
+   overlay (50) so it isn't hidden by the modal it's opened from. */
+.custom-select-menu {
+  position: fixed;
+  z-index: 60;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--glow-raised);
+  max-height: 260px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0.35rem;
+  margin: 0;
+  /* Same themed-scrollbar treatment as .modal-box — missed this one the
+     first pass, same fix applies here. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.custom-select-menu::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-select-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-select-menu::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+.custom-select-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+.custom-select-option {
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--color-text);
+}
+.custom-select-option:hover {
+  background: var(--color-card-hover);
+}
+.custom-select-option.selected {
+  background: rgba(237, 160, 34, 0.15);
+  color: var(--color-gold-light);
+  font-weight: 600;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+button {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  color: #241530;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(237, 160, 34, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+button:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(237, 160, 34, 0.45); }
+button:active { transform: translateY(0); }
+button:disabled { background: #4a3f52; color: var(--color-text-muted); box-shadow: none; cursor: not-allowed; transform: none; filter: none; }
+
+/* --- Layout --- */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  box-shadow: var(--glow-flat);
+}
+
+.list-plain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.list-plain li {
+  padding: 0.7rem 1rem;
+  background: var(--color-card);
+  border-radius: 10px;
+  box-shadow: var(--glow-flat);
+}
+
+.meta-line {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+/* --- Floating entity cards: events, occasions --- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 0.75rem 0 1.75rem;
+}
+
+.entity-card {
+  position: relative;
+  display: block;
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  box-shadow: var(--glow-flat);
+  transition: transform 0.16s cubic-bezier(.2,.8,.2,1), box-shadow 0.16s ease, background 0.16s ease;
+}
+a.entity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow-raised);
+  background: var(--color-card-hover);
+}
+.entity-card-title {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+  padding-right: 1.2rem;
+}
+.entity-card-meta {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+.entity-card-arrow {
+  position: absolute;
+  top: 1.3rem;
+  right: 1.3rem;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: color 0.16s ease, transform 0.16s ease;
+}
+a.entity-card:hover .entity-card-arrow {
+  color: var(--color-gold);
+  transform: translateX(3px);
+}
+
+/* --- Tags --- */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1.25rem;
+}
+.chip {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+.chip strong { color: var(--color-gold-light); }
+
+/* --- "Add new X" sections --- */
+.form-section {
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+  margin: 0.5rem 0 2rem;
+  box-shadow: var(--glow-flat);
+}
+.form-section h3 {
+  font-family: var(--font-geist-sans), sans-serif;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  margin: 0 0 1.1rem;
+  font-weight: 700;
+}
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem 1.1rem;
+  align-items: end;
+}
+/* Direct-child combinator, not a descendant selector — the submit button
+   is a direct child of .field-grid, but CustomSelect's own trigger button
+   is nested inside a <label> too (label > .custom-select > button), and a
+   plain ".field-grid button" would incorrectly catch that nested button
+   as well, breaking its layout. */
+.field-grid > button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.25rem;
+}
+
+/* Checkbox picklist replacing a free-text cuisine-tags input — see
+   AddOccasionModal.tsx. Spans the full field-grid width (like the submit
+   button above) since it holds many options, not one control. */
+.tag-picklist-any {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.tag-picklist {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg-alt);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.tag-picklist::-webkit-scrollbar {
+  width: 8px;
+}
+.tag-picklist::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tag-picklist::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+.tag-picklist-option {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+.tag-picklist-option:hover {
+  background: var(--color-card-hover);
+}
+.field-error {
+  grid-column: 1 / -1;
+  color: var(--color-warning-text, #e0a);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.warnings {
+  list-style: none;
+  padding: 0.85rem 1.1rem;
+  margin: 1rem 0;
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+/* --- Centered hero title block above the day-columns view --- */
+.event-hero {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+}
+.event-hero-eyebrow {
+  color: var(--color-gold-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.event-hero-title {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+.event-hero-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+/* --- Day columns: a horizontal swipe/scroll carousel, not a grid. Fixed-
+   width cards (never shrink, never wrap) — you swipe/scroll sideways to
+   reach more days, same idea as spinning a round masala dabba to the
+   compartment you want rather than squeezing every compartment into one
+   view. The scrollbar itself is hidden (scrollbar-width:none / the
+   ::-webkit rule below) so it reads as a swipe gesture, not a literal
+   scrollbar — the natural partially-cut-off card at the edge is what
+   signals "there's more this way." */
+.day-columns-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0 2rem;
+}
+.day-columns-nav {
+  flex: 0 0 auto;
+  background: var(--color-card);
+  border-radius: 999px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--color-text);
+  box-shadow: var(--glow-flat);
+}
+.day-columns-nav:hover {
+  background: var(--color-card-hover);
+}
+.day-columns {
+  display: flex;
+  /* flex:1 + min-width:0 is the fix — as a flex item inside
+     .day-columns-row, this would otherwise refuse to shrink below its
+     full content width (a classic flexbox default), so the row itself
+     grew wide instead of this element ever needing its own internal
+     scroll. That's what made the nav buttons and scrolling silently stop
+     working the moment this got wrapped in a row with them. */
+  flex: 1;
+  min-width: 0;
+  gap: 1.5rem;
+  overflow-x: auto;
+  /* No CSS scroll-behavior:smooth here — it actively broke scrolling in
+     testing (scrollLeft/scrollTo silently failed to move at all with it
+     set). The nav buttons request smooth scrolling explicitly per-click
+     via scrollTo({behavior:'smooth'}) in JS instead, which isn't affected
+     by whatever caused the CSS version to fail. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.day-columns::-webkit-scrollbar {
+  display: none;
+}
+.day-column {
+  flex: 0 0 230px;
+  border-radius: 18px;
+  border: 1.5px solid transparent;
+  transition: transform 0.18s cubic-bezier(.2,.8,.2,1), box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.day-column:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-gold);
+  /* Tighter, less blurry than --glow-raised on purpose — that glow's blur
+     radius was bleeding across the gap into the neighboring column at
+     narrower widths, making both look highlighted at once and making the
+     boundary between columns ambiguous to click. A crisp border plus a
+     contained shadow keeps the highlight unambiguously on one column. */
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45), 0 0 10px rgba(237, 160, 34, 0.15);
+}
+.day-column-header {
+  position: relative;
+  background: linear-gradient(160deg, #3a1f22, var(--color-bg-alt));
+  border-radius: 18px 18px 0 0;
+  padding: 1.4rem 0 1.5rem;
+  text-align: center;
+}
+.day-column-delete {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+}
+.day-column-delete:hover {
+  color: var(--color-nonveg);
+  background: rgba(214, 69, 69, 0.12);
+  transform: none;
+  box-shadow: none;
+}
+.day-column-header-label {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+.day-column-header-number {
+  display: block;
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.day-column-body {
+  background: var(--color-bg-alt);
+  border-radius: 0 0 18px 18px;
+  padding: 1rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.service-row {
+  position: relative;
+  display: block;
+  background: var(--color-card);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  transition: background 0.15s ease;
+}
+.service-row:hover {
+  background: var(--color-card-hover);
+}
+.service-row-delete {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.service-row:hover .service-row-delete {
+  opacity: 1;
+}
+.service-row-delete:hover {
+  color: var(--color-nonveg);
+  background: rgba(214, 69, 69, 0.12);
+  transform: none;
+  box-shadow: none;
+}
+.service-row-title {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 1rem;
+}
+.service-row-action {
+  color: var(--color-gold-light);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+.day-column-empty {
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+  padding: 1.2rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* "+" trigger inside each day column, and the taller version standing in
+   for a whole new day at the end of the grid. Both open the same modal
+   (AddOccasionModal) — this is just the trigger's resting appearance. */
+.day-add-trigger {
+  background: transparent;
+  border: 1.5px dashed var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.7rem;
+  box-shadow: none;
+}
+.day-add-trigger:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-light);
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+.day-column-add-day {
+  display: flex;
+  align-items: stretch;
+  min-height: 220px;
+}
+.day-column-add-day .day-add-trigger {
+  flex: 1;
+  border-radius: 18px;
+  font-size: 0.95rem;
+}
+
+/* --- Modal (AddOccasionModal) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  /* No backdrop-filter blur here on purpose — it was sampling across the
+     page's max-width content boundary (empty margin on one side, page
+     content on the other) and blending them into a visible soft seam
+     right at that edge. A higher-opacity flat scrim dims the page behind
+     the modal just as effectively without that artifact. */
+  background: rgba(10, 6, 14, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+}
+.modal-box {
+  background: var(--color-card);
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--glow-raised);
+  /* Firefox: thin, theme-colored scrollbar instead of the OS default. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+/* Chrome/Edge/Safari use this pseudo-element API instead of the two
+   properties above — both are needed to cover all three browsers. */
+.modal-box::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modal-box::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+.modal-box::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.modal-close {
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0.2rem 0.5rem;
+}
+.modal-close:hover {
+  color: var(--color-text);
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Veg / non-veg indicator: the standard green-square/red-square dot
+   convention from Indian menus --- */
+.diet-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+.diet-dot.veg { border: 1.5px solid var(--color-veg); }
+.diet-dot.nonveg { border: 1.5px solid var(--color-nonveg); }
+.diet-dot::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.diet-dot.veg::after { background: var(--color-veg); }
+.diet-dot.nonveg::after { background: var(--color-nonveg); }
+.menu-item-row {
+  display: flex;
+  align-items: center;
+}
+
+/* --- Generated menu option cards --- */
+.option-grid {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.option-card {
+  background: var(--color-card);
+  border-radius: 14px;
+  min-width: 250px;
+  flex: 1 1 250px;
+  overflow: hidden;
+  box-shadow: var(--glow-raised);
+}
+.option-card-header {
+  background: linear-gradient(135deg, var(--color-bg-alt), var(--color-card));
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1.2rem;
+}
+.option-card-header h3 {
+  color: var(--color-text);
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+.option-price {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--color-gold-light);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+/* Dishes grouped under a course-section label (Starters/Main Course/etc.)
+   rather than one flat list with the course tacked on in parentheses. */
+.menu-section {
+  padding: 0.9rem 1.2rem;
+  border-top: 1px solid var(--color-border);
+}
+.menu-section:first-of-type {
+  border-top: none;
+  padding-top: 1rem;
+}
+.menu-section:last-of-type {
+  padding-bottom: 1rem;
+}
+.menu-section-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold-light);
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+}
+.option-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.menu-item-name {
+  font-weight: 600;
 }

@@ -1,0 +1,10 @@
+[
+  {"name": "Classic", "occasion_type": "breakfast", "service_style": "buffet", "base_per_person": 28.00},
+  {"name": "Classic", "occasion_type": "welcome_dinner", "service_style": "buffet", "base_per_person": 55.00},
+  {"name": "Classic", "occasion_type": "mehndi", "service_style": "stations", "base_per_person": 45.00},
+  {"name": "Classic", "occasion_type": "sangeet", "service_style": "stations", "base_per_person": 50.00},
+  {"name": "Classic", "occasion_type": "wedding_lunch", "service_style": "buffet", "base_per_person": 60.00},
+  {"name": "Premium", "occasion_type": "cocktail_hour", "service_style": "stations", "base_per_person": 68.00},
+  {"name": "Luxury", "occasion_type": "dinner_reception", "service_style": "buffet", "base_per_person": 110.00},
+  {"name": "Classic", "occasion_type": "late_night_snacks", "service_style": "stations", "base_per_person": 22.00}
+]

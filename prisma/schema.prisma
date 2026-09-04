@@ -1,0 +1,185 @@
+// Full application schema for the Madras Catering menu generator.
+// Superset of schema.prisma (which covers only the two tables the Python
+// ETL pipeline writes to: MenuItem and TaxCategory). This is the schema
+// the Next.js app's own API routes read/write for the wizard itself.
+// Column/table names are snake_case (@map) for consistency with the ETL
+// pipeline's raw SQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  role           String    @default("staff") // "admin" | "staff" | "chef"
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  eventsCreated  Event[]   @relation("EventCreatedBy")
+  dishReferences DishReference[]
+
+  @@map("users")
+}
+
+model Event {
+  id              String           @id @default(uuid())
+  createdByUserId String?          @map("created_by_user_id")
+  createdBy       User?            @relation("EventCreatedBy", fields: [createdByUserId], references: [id])
+  clientName      String           @map("client_name")
+  eventName       String           @map("event_name")
+  guestCount      Int?             @map("guest_count")
+  venue           String?
+  tradition       String?          // "hindu" | "muslim" | "christian" | "other"
+  startDate       DateTime         @map("start_date")
+  endDate         DateTime         @map("end_date")
+  cuisineProfiles CuisineProfile[]
+  occasions       Occasion[]
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model CuisineProfile {
+  id          String     @id @default(uuid())
+  eventId     String     @map("event_id")
+  event       Event      @relation(fields: [eventId], references: [id])
+  name        String     // e.g. "Jaipuri-Hyderabadi Fusion"
+  cuisineTags String[]   @map("cuisine_tags")
+  occasions   Occasion[]
+
+  @@map("cuisine_profiles")
+}
+
+model PriceTier {
+  id            String     @id @default(uuid())
+  name          String     // "Classic" | "Premium" | "Luxury"
+  occasionType  String     @map("occasion_type")
+  serviceStyle  String     @map("service_style") // "plated" | "buffet" | "family_style" | "stations"
+  basePerPerson Decimal    @map("base_per_person") @db.Decimal(8, 2)
+  occasions     Occasion[]
+
+  @@map("price_tiers")
+}
+
+model Occasion {
+  id               String                @id @default(uuid())
+  eventId          String                @map("event_id")
+  event            Event                 @relation(fields: [eventId], references: [id])
+  cuisineProfileId String?               @map("cuisine_profile_id")
+  cuisineProfile   CuisineProfile?       @relation(fields: [cuisineProfileId], references: [id])
+  priceTierId      String?               @map("price_tier_id")
+  priceTier        PriceTier?            @relation(fields: [priceTierId], references: [id])
+  dayNumber        Int                   @map("day_number")
+  sequenceOrder    Int                   @map("sequence_order") // generation order — feeds the no-repeat ledger
+  occasionType     String                @map("occasion_type") // welcome_dinner | breakfast | mehndi | sangeet | wedding_lunch | cocktail_hour | dinner_reception | late_night_snacks
+  guestCount       Int?                  @map("guest_count")
+  venue            String?
+  serviceType      String?               @map("service_type") // plated | buffet | family_style | stations
+  serviceTime      DateTime?             @map("service_time")
+  atmosphere       String?
+  vegNonvegRatio   String?               @map("veg_nonveg_ratio")
+  liveStations     LiveStation[]
+  generatedOptions GeneratedMenuOption[]
+  createdAt        DateTime              @default(now()) @map("created_at")
+  updatedAt        DateTime              @updatedAt @map("updated_at")
+
+  @@map("occasions")
+}
+
+model LiveStation {
+  id              String     @id @default(uuid())
+  name            String
+  region          String     // cuisine tag, e.g. "north_indian"
+  vegNonveg       String     @map("veg_nonveg") // "veg" | "nonveg" | "both"
+  pricePerPerson  Decimal    @map("price_per_person") @db.Decimal(8, 2)
+  equipmentNeeded String[]   @default([]) @map("equipment_needed")
+  occasions       Occasion[] // implicit many-to-many
+
+  @@map("live_stations")
+}
+
+model GeneratedMenuOption {
+  id                     String                    @id @default(uuid())
+  occasionId             String                    @map("occasion_id")
+  occasion               Occasion                  @relation(fields: [occasionId], references: [id])
+  optionNumber           Int                       @map("option_number") // 1, 2, or 3
+  computedPricePerPerson Decimal?                  @map("computed_price_per_person") @db.Decimal(8, 2)
+  items                  GeneratedMenuOptionItem[]
+  createdAt              DateTime                  @default(now()) @map("created_at")
+
+  @@map("generated_menu_options")
+}
+
+model GeneratedMenuOptionItem {
+  id                    String              @id @default(uuid())
+  generatedMenuOptionId String              @map("generated_menu_option_id")
+  generatedMenuOption   GeneratedMenuOption @relation(fields: [generatedMenuOptionId], references: [id])
+  menuItemId            String              @map("menu_item_id")
+  menuItem              MenuItem            @relation(fields: [menuItemId], references: [id])
+  locked                Boolean             @default(false) // user locked this item during review
+
+  @@map("generated_menu_option_items")
+}
+
+// --- Below: same as schema.prisma (the ETL pipeline's target tables) ---
+
+model TaxCategory {
+  id            String     @id @default(uuid())
+  name          String     @unique
+  jurisdiction  String
+  ratePercent   Decimal    @map("rate_percent") @db.Decimal(5, 3)
+  effectiveDate DateTime   @default(now()) @map("effective_date")
+  menuItems     MenuItem[]
+
+  @@map("tax_categories")
+}
+
+model MenuItem {
+  id                  String                    @id @default(uuid())
+  name                String                    @unique
+  course              String
+  vegNonveg           String                    @map("veg_nonveg")
+  cuisineTags         String[]                  @map("cuisine_tags")
+  priceWeight         String                    @map("price_weight")
+  isStaple            Boolean                   @default(false) @map("is_staple")
+  allergens           String[]                  @default([])
+  dietaryFlags        String[]                  @default([]) @map("dietary_flags")
+  religionSuitability String[]                  @default([]) @map("religion_suitability")
+  occasionSuitability String[]                  @default([]) @map("occasion_suitability")
+  spiceLevel          String?                   @map("spice_level")
+  prepMethod          String?                   @map("prep_method")
+  portionUnit         String?                   @map("portion_unit")
+  costPerPerson       Decimal?                  @map("cost_per_person") @db.Decimal(8, 2)
+  taxCategoryId       String?                   @map("tax_category_id")
+  taxCategory         TaxCategory?              @relation(fields: [taxCategoryId], references: [id])
+  active              Boolean                   @default(true)
+  confidence          String?
+  sourceDocs          String[]                  @default([]) @map("source_docs")
+  usedInOptions       GeneratedMenuOptionItem[]
+  chefReferences      DishReference[]
+  createdAt           DateTime                  @default(now()) @map("created_at")
+  updatedAt           DateTime                  @updatedAt @map("updated_at")
+
+  @@map("menu_items")
+}
+
+model DishReference {
+  id           String   @id @default(uuid())
+  menuItemId   String   @map("menu_item_id")
+  menuItem     MenuItem @relation(fields: [menuItemId], references: [id])
+  url          String   // YouTube link (or any prep-reference URL)
+  label        String?  // e.g. "Plating technique", "Full prep walkthrough"
+  addedByUserId String? @map("added_by_user_id")
+  addedBy      User?    @relation(fields: [addedByUserId], references: [id])
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("dish_references")
+}

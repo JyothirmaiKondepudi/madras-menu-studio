@@ -1,0 +1,2639 @@
+[
+  {
+    "name": "Bombay Veg. Sandwiches",
+    "course": "snack",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "fusion",
+      "mumbai_street_food"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast",
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "grilled",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Bombay Chicken Sandwiches",
+    "course": "snack",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "fusion",
+      "mumbai_street_food"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast",
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "grilled",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Truffle French Fries & Cajun French Fries",
+    "course": "snack",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american",
+      "modern"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Linguine with Marinara and Sauteed Vegetables (Live Pasta Station)",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "italian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "live_station_sauteed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Vegetable Spring Rolls with Hot Chili & Sweet Chili Sauce",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "chinese",
+      "indo_chinese"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "soy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Vegetable Noodles & Vegetable Fried Rice",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "chinese",
+      "indo_chinese"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "soy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "stir_fry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Boutique Taco Station",
+    "course": "main",
+    "veg_nonveg": "both",
+    "cuisine_tags": [
+      "mexican"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_assembled",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Over the Top Nacho Bar",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mexican"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Spiced Veggie Quesadilla (Grilled Live to Order)",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mexican"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Chicken Quesadilla",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "mexican"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Roasted Red Pepper Hummus with Seasoned Pita Chips",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mediterranean"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "sesame"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Falafel with Tahini Drizzle",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mediterranean"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "sesame"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Greek Farmer Salad with Feta Cheese & Olives",
+    "course": "salad",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "greek",
+      "mediterranean"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "tossed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Ice Cream, Gelato, Sherbet Station",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american",
+      "italian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Chocolate Fondue Bar with Marshmallows, Pretzels, Fruit Skewers",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american",
+      "modern"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Cocktail Samosa with Assorted Chutney",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour",
+      "mehndi",
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Vegetable Korma",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mughlai",
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "mild",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Butter Chicken",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "north_indian",
+      "punjabi"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "medium",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Basmati Peas Pilaf",
+    "course": "rice",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "steamed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Freshly Baked Naan",
+    "course": "bread",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "tandoor_baked",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Malabar Paratha",
+    "course": "bread",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "kerala",
+      "south_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "griddle_fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Warm Jalebi with Vanilla Bean Ice Cream",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "mild",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Gulab Jamoon with Roasted Almonds",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "dairy",
+      "gluten",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "fried_in_syrup",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Freshly Brewed Chai",
+    "course": "beverage",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "brewed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Cocktail Vegetable Samosas with Assorted Chutneys",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Chicken 65 with Southern Spices",
+    "course": "appetizer",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "south_indian",
+      "tamil"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "hot",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Vegetable Pilaf",
+    "course": "rice",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "steamed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Palak Methi Corn Panner",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "mild",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Vegetable Chettinad",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "chettinad",
+      "south_indian",
+      "tamil"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "hot",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Butter Naan",
+    "course": "bread",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "tandoor_baked",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Mughalai Paratha",
+    "course": "bread",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mughlai",
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "griddle_fried",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Kozhikoden Mutton Biryani",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "kerala",
+      "south_indian"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "hot",
+    "prep_method": "dum_biryani",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Thalassery Chicken Biryani",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "kerala",
+      "south_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "medium",
+    "prep_method": "dum_biryani",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Vegetable Dum Biryani",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "south_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "medium",
+    "prep_method": "dum_biryani",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Chicken Madras",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "south_indian",
+      "tamil"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "hot",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Basmati Pilaf",
+    "course": "rice",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "steamed",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Gajar Halwa topped with Vanilla Bean Ice Cream",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "mild",
+    "prep_method": "slow_cooked",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Papdi Chaat Display with Chaat & Sev",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian",
+      "street_food"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour",
+      "mehndi",
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "high",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Caesar Salad, Banana Bread Croutons, Mango Caesar Dressing",
+    "course": "salad",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american",
+      "fusion"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "egg",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "tossed",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Penne alla Vodka with Chicken",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "italian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "other"
+    ],
+    "occasion_suitability": [
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "live_station_sauteed",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Stir Fry Station: Chicken | Shrimp | Vegetables | Tofu, Guest's Choice",
+    "course": "main",
+    "veg_nonveg": "both",
+    "cuisine_tags": [
+      "chinese",
+      "indo_chinese"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "shellfish",
+      "soy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_stir_fry",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Peach Pepper & Cheese Veggie Enchiladas",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "mexican"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "baked",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Chili Chicken",
+    "course": "appetizer",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "chinese",
+      "indo_chinese"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "soy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour",
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Tandoori Chicken Chops on Tawa",
+    "course": "appetizer",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "north_indian",
+      "punjabi"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour",
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "tandoor_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Farfalle / Penne (Italian Station)",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "italian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "mild",
+    "prep_method": "boiled_sauteed",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Marinara Sauce and Alfredo Sauce (on the side)",
+    "course": "condiment",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "italian"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception",
+      "wedding_lunch"
+    ],
+    "spice_level": "mild",
+    "prep_method": "sauce",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Beef Pepper Fry",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "kerala",
+      "south_indian"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "hot",
+    "prep_method": "dry_fry",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Hand Rolled Panner & Spinach Puffs",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "mild",
+    "prep_method": "baked",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Tandoori Grilled Baby Lamb Chops",
+    "course": "appetizer",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "north_indian",
+      "punjabi"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "tandoor_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Jaipuri Panner Kati Rolls",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "rajasthani"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Chicken Tikka Kati Rolls",
+    "course": "appetizer",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "north_indian",
+      "punjabi"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Rasmalai in Cocktail Martini Glasses, Pistachio & Mint",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "modern",
+      "north_indian"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "mild",
+    "prep_method": "plated_display",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Live Kulfi Falooda Flamb\u00e9 Station",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "modern",
+      "north_indian"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "mild",
+    "prep_method": "live_flambe_station",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Mango, Strawberry, Sweet Lassi Shooters (Butler Passed)",
+    "course": "beverage",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "modern",
+      "north_indian"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "mild",
+    "prep_method": "blended",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Masala Vada on Crispy Endive",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "south_indian",
+      "tamil"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "lentils"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Crispy Spring Rolls with Sweet & Hot Chilli Sauce",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "chinese",
+      "indo_chinese"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "soy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Manchurian Kati Rolls",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "indo_chinese"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "soy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_grilled",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Mutta Roast",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "kerala"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "egg"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "medium",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Beans Thoran",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "kerala"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "medium",
+    "prep_method": "stir_fry",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Handmade French Macaroon Tower & Petit Fours Display",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "french",
+      "modern"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "dairy",
+      "egg",
+      "nuts"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "mild",
+    "prep_method": "baked_display",
+    "tax_category": "prepared_food",
+    "confidence": "medium",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Desserts (chosen from hotel selection)",
+    "course": "dessert",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "haldi",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "hotel_provided",
+    "tax_category": "prepared_food",
+    "confidence": "low",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Moroccan Chicken (station add-on)",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "mediterranean",
+      "moroccan"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "medium",
+    "prep_method": "roasted",
+    "tax_category": "prepared_food",
+    "confidence": "low",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Salmon (station add-on)",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "mediterranean"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "fish"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet"
+    ],
+    "spice_level": "mild",
+    "prep_method": "grilled",
+    "tax_category": "prepared_food",
+    "confidence": "low",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "haldi_and_mehndi"
+    ]
+  },
+  {
+    "name": "Condiments Station (Onion, Cilantro, Tomato, Yogurt, Punjabi Pickle, Green Chilies, Lime)",
+    "course": "condiment",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": true,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "christian",
+      "hindu",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "any"
+    ],
+    "spice_level": "mild",
+    "prep_method": "raw_assembled",
+    "tax_category": "prepared_food",
+    "confidence": "low",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Kallu Shapp Beef Ulathiyathu",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "kerala"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "dinner_reception"
+    ],
+    "spice_level": "hot",
+    "prep_method": "dry_roast",
+    "tax_category": "prepared_food",
+    "confidence": "low",
+    "seen_in_docs_count": 1,
+    "example_sources": [
+      "kerala_inspired_menus"
+    ]
+  },
+  {
+    "name": "Idli Sambar with Coconut Chutney",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "south_indian",
+      "tamil"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "lentils"
+    ],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast"
+    ],
+    "spice_level": "mild",
+    "prep_method": "steamed",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Masala Dosa Station",
+    "course": "live_station",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "south_indian",
+      "telugu_andhra"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast"
+    ],
+    "spice_level": "medium",
+    "prep_method": "live_station_griddle",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Aloo Paratha with Yogurt & Pickle",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "punjabi",
+      "north_indian"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "gluten",
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast"
+    ],
+    "spice_level": "mild",
+    "prep_method": "griddle_fried",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Fresh Fruit & Yogurt Parfait Bar",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "american",
+      "modern"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "breakfast"
+    ],
+    "spice_level": "mild",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Dhokla with Green Chutney",
+    "course": "appetizer",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "gujarati"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "welcome_dinner",
+      "mehndi"
+    ],
+    "spice_level": "mild",
+    "prep_method": "steamed",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Undhiyu",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "gujarati"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [
+      "vegan",
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "welcome_dinner",
+      "wedding_lunch"
+    ],
+    "spice_level": "medium",
+    "prep_method": "slow_cooked",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Sindhi Kadhi with Steamed Rice",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "sindhi"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "welcome_dinner",
+      "wedding_lunch"
+    ],
+    "spice_level": "medium",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Kolhapuri Chicken",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "marathi"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "welcome_dinner",
+      "dinner_reception"
+    ],
+    "spice_level": "hot",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Seekh Kebab Sliders, Late-Night Style",
+    "course": "snack",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "north_indian",
+      "punjabi",
+      "fusion"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "gluten"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "late_night_snacks"
+    ],
+    "spice_level": "medium",
+    "prep_method": "grilled",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Loaded Masala Fries",
+    "course": "snack",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "fusion",
+      "american"
+    ],
+    "price_weight": "light",
+    "is_staple": false,
+    "allergens": [
+      "dairy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "late_night_snacks"
+    ],
+    "spice_level": "medium",
+    "prep_method": "fried",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Pad Thai with Tofu",
+    "course": "main",
+    "veg_nonveg": "veg",
+    "cuisine_tags": [
+      "thai"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [
+      "nuts",
+      "soy"
+    ],
+    "dietary_flags": [
+      "vegetarian"
+    ],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "sangeet",
+      "cocktail_hour"
+    ],
+    "spice_level": "medium",
+    "prep_method": "stir_fry",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "California Roll & Spicy Tuna Roll Display",
+    "course": "appetizer",
+    "veg_nonveg": "both",
+    "cuisine_tags": [
+      "sushi"
+    ],
+    "price_weight": "premium",
+    "is_staple": false,
+    "allergens": [
+      "shellfish",
+      "fish",
+      "soy"
+    ],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "hindu",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "cocktail_hour"
+    ],
+    "spice_level": "mild",
+    "prep_method": "display_station",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Chicken Karahi",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "pakistani"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "hindu",
+      "muslim",
+      "christian",
+      "other"
+    ],
+    "occasion_suitability": [
+      "wedding_lunch",
+      "dinner_reception"
+    ],
+    "spice_level": "hot",
+    "prep_method": "curry",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  },
+  {
+    "name": "Bhuna Khichuri with Beef Curry",
+    "course": "main",
+    "veg_nonveg": "nonveg",
+    "cuisine_tags": [
+      "bangladeshi"
+    ],
+    "price_weight": "standard",
+    "is_staple": false,
+    "allergens": [],
+    "dietary_flags": [],
+    "religion_suitability": [
+      "christian",
+      "muslim",
+      "other"
+    ],
+    "occasion_suitability": [
+      "wedding_lunch",
+      "welcome_dinner"
+    ],
+    "spice_level": "hot",
+    "prep_method": "slow_cooked",
+    "tax_category": "prepared_food",
+    "confidence": "placeholder",
+    "seen_in_docs_count": 0,
+    "example_sources": [
+      "placeholder_prototype_data"
+    ]
+  }
+]
