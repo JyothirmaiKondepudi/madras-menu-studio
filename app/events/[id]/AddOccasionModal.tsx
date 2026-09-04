@@ -15,13 +15,13 @@ type PlainPriceTier = {
 };
 
 const OCCASION_TYPES = [
-  "breakfast", "welcome_dinner", "mehendi", "sangeet",
+  "breakfast", "welcome_dinner", "mehendi", "sangeet", "welcome_lunch", "mundan",
   "wedding_lunch", "cocktail_hour", "dinner_reception", "late_night_snacks", 
   "ceremony_refreshments", "farwell_brunch", "haldi", "baraat", "birthday","graduation",
   "anniversary", "boxed_lunch", "boxed_breakfast", "other"
 ];
 const SERVICE_TYPES = ["buffet", "live_stations", "plated", "family_style", "butler_passed"];
-const VENUE_TYPES = ["hotel", "outdoor", "mueseum", "country_club", "private_home",, "banquet_hall", "other"];
+const VENUE_TYPES = ["hotel", "outdoor", "mueseum", "country_club", "private_home", "banquet_hall", "other"];
 const NEW_CUISINE_VALUE = "__new__";
 
 // A controlled component now, not a self-contained trigger+popup — it used
@@ -36,7 +36,6 @@ export default function AddOccasionModal({
   dayNumber,
   cuisineProfiles,
   priceTiers,
-  availableCuisineTags,
   nextSequenceOrder,
   onClose,
 }: {
@@ -44,7 +43,6 @@ export default function AddOccasionModal({
   dayNumber: number;
   cuisineProfiles: CuisineProfile[];
   priceTiers: PlainPriceTier[];
-  availableCuisineTags: string[];
   nextSequenceOrder: number;
   onClose: () => void;
 }) {
@@ -57,23 +55,8 @@ export default function AddOccasionModal({
   );
   const [priceTierId, setPriceTierId] = useState(priceTiers[0]?.id ?? "");
   const [newCuisineName, setNewCuisineName] = useState("");
-  // A picklist of real MenuItem.cuisineTags values, not free text — a
-  // profile used to be creatable with a typo'd or blank tag, which
-  // MenuGenerator's exact-string match then silently treated as either
-  // "matches nothing" or "no restriction at all" (see slugify.ts and
-  // menuItemService.listDistinctCuisineTags). "Any cuisine" is now its own
-  // explicit checkbox so "no restriction" is a deliberate choice rather
-  // than what happens by default when someone leaves the tags blank.
-  const [anyCuisine, setAnyCuisine] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [tagError, setTagError] = useState<string | null>(null);
+  const [newCuisineTags, setNewCuisineTags] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  function toggleTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  }
 
   useEffect(() => {
     if (cuisineProfileId !== NEW_CUISINE_VALUE && !cuisineProfiles.some((p) => p.id === cuisineProfileId)) {
@@ -89,12 +72,6 @@ export default function AddOccasionModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    if (cuisineProfileId === NEW_CUISINE_VALUE && !anyCuisine && selectedTags.length === 0) {
-      setTagError("Pick at least one cuisine tag, or choose \"Any cuisine\".");
-      return;
-    }
-    setTagError(null);
     setSubmitting(true);
 
     let resolvedCuisineProfileId = cuisineProfileId;
@@ -104,7 +81,7 @@ export default function AddOccasionModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newCuisineName,
-          cuisineTags: anyCuisine ? [] : selectedTags,
+          cuisineTags: newCuisineTags.split(",").map((t) => t.trim()).filter(Boolean),
         }),
       });
       const created = await res.json();
@@ -196,32 +173,14 @@ export default function AddOccasionModal({
                   required
                 />
               </label>
-              <label className="tag-picklist-any">
+              <label>
+                New Cuisine Tags
                 <input
-                  type="checkbox"
-                  checked={anyCuisine}
-                  onChange={(e) => setAnyCuisine(e.target.checked)}
+                  placeholder="e.g. kerala, south_indian"
+                  value={newCuisineTags}
+                  onChange={(e) => setNewCuisineTags(e.target.value)}
                 />
-                Any cuisine (no restriction)
               </label>
-              {!anyCuisine && (
-                <label>
-                  Cuisine Tags
-                  <div className="tag-picklist">
-                    {availableCuisineTags.map((tag) => (
-                      <label key={tag} className="tag-picklist-option">
-                        <input
-                          type="checkbox"
-                          checked={selectedTags.includes(tag)}
-                          onChange={() => toggleTag(tag)}
-                        />
-                        {formatSlug(tag)}
-                      </label>
-                    ))}
-                  </div>
-                </label>
-              )}
-              {tagError && <p className="field-error">{tagError}</p>}
             </>
           )}
           <button type="submit" disabled={submitting}>
