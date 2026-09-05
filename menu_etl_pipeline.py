@@ -217,9 +217,18 @@ def call_claude_extract(client, filename: str, doc_text: str) -> dict:
     if workspace_id:
         extra_headers["anthropic-workspace-id"] = workspace_id
 
-    resp = client.messages.create(
+    # A doc that packs several full menus (common for a "complete celebration"
+    # file with sangeet + lunch + reception all in one) needs well over the
+    # old 8000-token cap to describe every item under our (verbose,
+    # 12-field-per-item) schema — 8000 truncated mid-JSON with no error and
+    # silently wrote back an empty extraction. Even 32000 wasn't enough for
+    # the largest observed doc (a 4-menu, 100+ item file), so 64000; .stream()
+    # is required by the SDK once max_tokens is high enough that a
+    # non-streaming call could exceed its timeout.
+    MAX_TOKENS = 64000
+    with client.messages.stream(
         model="claude-sonnet-4-5",
-        max_tokens=8000,
+        max_tokens=MAX_TOKENS,
         tools=[EXTRACTION_SCHEMA],
         tool_choice={"type": "tool", "name": "record_menus"},
         messages=[{
@@ -227,7 +236,18 @@ def call_claude_extract(client, filename: str, doc_text: str) -> dict:
             "content": EXTRACTION_PROMPT.format(filename=filename, doc_text=doc_text),
         }],
         extra_headers=extra_headers,
-    )
+    ) as stream:
+        resp = stream.get_final_message()
+
+    if resp.stop_reason == "max_tokens":
+        # Don't silently write back a truncated/partial extraction — surface
+        # it so cmd_extract's per-doc try/except logs a visible FAILED line
+        # instead of a quietly empty result.
+        raise RuntimeError(
+            f"Extraction for {filename} hit the {MAX_TOKENS}-token cap before finishing "
+            f"(doc likely has an unusually large number of menus/items) — "
+            f"needs a bigger max_tokens or splitting the doc before extraction."
+        )
     for block in resp.content:
         if block.type == "tool_use":
             return block.input
@@ -274,7 +294,10 @@ def cmd_extract(args):
             # source subfolders can share a filename, and this is what
             # ends up in each dish's traceable source_docs list later.
             result["_source_doc"] = str(rel)
-            out_path.write_text(json.dumps(result, indent=2))
+            # encoding="utf-8" required — Path.write_text() otherwise falls
+            # back to the system locale codepage (cp1252 on Windows), same
+            # root cause as the dish_review.csv write below.
+            out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
         except Exception as e:
             print(f"   -> FAILED: {e}", file=sys.stderr)
             # Don't let one bad doc kill the whole batch.
@@ -297,7 +320,9 @@ def cmd_aggregate(args):
 
     all_items = []  # flat list, one row per (item, source menu)
     for jf in sorted(in_dir.glob("*.json")):
-        data = json.loads(jf.read_text())
+        # encoding="utf-8" required to match cmd_extract's write — same
+        # missing-default issue as the dish_review.csv write below.
+        data = json.loads(jf.read_text(encoding="utf-8"))
         source_doc = data.get("_source_doc", jf.stem)
         for menu in data.get("menus", []):
             for item in menu.get("items", []):
@@ -350,7 +375,18 @@ def cmd_aggregate(args):
         # win over another sighting that just didn't think to check.
         religion_sets = [set(g.get("religion_suitability_guess", ["any"])) for g in group]
         religion_suitability = sorted(set.intersection(*religion_sets)) if religion_sets else ["any"]
-        occasion_suitability = sorted({o for g in group for o in g.get("occasion_suitability_guess", [])})
+        # Specific tags win over "any" whenever any sighting gave one — "any"
+        # only means "this particular sighting had no specific signal," not
+        # "broadly appropriate despite what other sightings say." A plain
+        # union let one generic-menu sighting's "any" outlive every other
+        # sighting's specific tags forever (found by generating real menus:
+        # dinner curries kept showing up for breakfast because one source
+        # doc's guess of "any" never got displaced by the 3+ other sightings
+        # that correctly said dinner_reception/lunch/sangeet/wedding_lunch).
+        # "any" only survives if literally every sighting ever guessed it.
+        occasion_sets = [set(g.get("occasion_suitability_guess", [])) for g in group]
+        specific_occasion_tags = {o for s in occasion_sets for o in s if o != "any"}
+        occasion_suitability = sorted(specific_occasion_tags) if specific_occasion_tags else ["any"]
         sources = sorted({g["source_doc"] for g in group})
 
         merged.append({
@@ -377,7 +413,14 @@ def cmd_aggregate(args):
     # Review CSV — human-eyeball pass before this becomes the live database.
     import csv
     review_path = out_dir / "dish_review.csv"
-    with open(review_path, "w", newline="") as f:
+    # encoding="utf-8" is required, not a default — open() with no encoding
+    # falls back to the system locale codepage (cp1252 on this Windows
+    # machine), not UTF-8, despite _read_reviewed_csv's comment claiming
+    # this file is "always written as UTF-8." Found by generating real
+    # menus: accented dish names (sautéed, etc.) were coming out mangled
+    # even in a file nobody had opened in Excel yet — the corruption was
+    # happening right here on write, before any human ever touched it.
+    with open(review_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["name", "course", "veg_nonveg", "cuisine_tags", "price_weight", "is_staple",
                     "allergens", "dietary_flags", "religion_suitability", "occasion_suitability",
@@ -390,7 +433,7 @@ def cmd_aggregate(args):
                         m["confidence"], m["seen_in_docs_count"], "; ".join(m["example_sources"])])
 
     seed_path = out_dir / "menu_items_seed.json"
-    seed_path.write_text(json.dumps(merged, indent=2))
+    seed_path.write_text(json.dumps(merged, indent=2), encoding="utf-8")
 
     low_conf = sum(1 for m in merged if m["confidence"] == "low")
     print(f"Merged into {len(merged)} unique dishes ({low_conf} flagged low-confidence).")

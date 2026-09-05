@@ -69,8 +69,10 @@ export default async function OccasionDetailPage({
       <div className="card" style={{ marginBottom: "1.5rem" }}>
         <p className="meta-line" style={{ margin: 0 }}>
           {occasion.serviceType ? formatSlug(occasion.serviceType) : "?"} · {occasion.guestCount ?? "?"} guests ·{" "}
-          Cuisine: {occasion.cuisineProfile?.name ?? "none"} ·{" "}
-          Price tier: {occasion.priceTier?.name ?? "none"} (${occasion.priceTier ? String(occasion.priceTier.basePerPerson) : "?"} base)
+          Cuisine: {occasion.cuisineTags.length > 0 ? occasion.cuisineTags.map((t) => formatSlug(t)).join(" + ") : "Any"} ·{" "}
+          {occasion.minPricePerPerson != null && occasion.maxPricePerPerson != null
+            ? `Target: $${occasion.minPricePerPerson} – $${occasion.maxPricePerPerson} / person`
+            : `Price tier: ${occasion.priceTier?.name ?? "none"} ($${occasion.priceTier ? String(occasion.priceTier.basePerPerson) : "?"} base)`}
         </p>
       </div>
 
@@ -101,6 +103,20 @@ export default async function OccasionDetailPage({
                 </ul>
               </div>
             ))}
+            {option.liveStations.length > 0 && (
+              <div className="menu-section">
+                <div className="menu-section-label">Live Stations</div>
+                <ul>
+                  {option.liveStations.map((station) => (
+                    <li key={station.id} className="menu-item-row">
+                      <span className="menu-item-name">
+                        {station.name} (+${String(station.pricePerPerson)}/person)
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ))}
       </div>

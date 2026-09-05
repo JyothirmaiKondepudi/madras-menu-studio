@@ -27,9 +27,20 @@ export async function POST(
   const { options, warnings } = generator.generateForOccasion(
     occasion,
     occasion.event,
-    occasion.cuisineProfile,
+    occasion.cuisineTags,
     occasion.priceTier,
     pool
+  );
+
+  // Live stations are a service decision, not a budget-driven dish pick —
+  // confirmed with user: every selected station shows up in all 3 tiers
+  // identically, and its price is added on top of the dish-driven target,
+  // not counted against it (previously wired up for selection/storage
+  // only — never actually attached to what got generated, so a selected
+  // "Dosa Station" silently never appeared in any menu).
+  const liveStationTotal = occasion.liveStations.reduce(
+    (sum, s) => sum + Number(s.pricePerPerson),
+    0
   );
 
   // Replace whatever was previously generated for this occasion, so
@@ -48,10 +59,13 @@ export async function POST(
         data: {
           occasionId: id,
           optionNumber: option.optionNumber,
-          computedPricePerPerson: option.computedPricePerPerson,
+          computedPricePerPerson: option.computedPricePerPerson + liveStationTotal,
           items: { create: option.items.map((item) => ({ menuItemId: item.id })) },
+          ...(occasion.liveStations.length > 0
+            ? { liveStations: { connect: occasion.liveStations.map((s) => ({ id: s.id })) } }
+            : {}),
         },
-        include: { items: { include: { menuItem: true } } },
+        include: { items: { include: { menuItem: true } }, liveStations: true },
       });
       results.push(row);
     }

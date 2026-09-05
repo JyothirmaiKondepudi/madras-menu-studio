@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     tradition: body.tradition || null,
     startDate: new Date(body.startDate),
     endDate: new Date(body.endDate),
+    defaultCuisineTags: Array.isArray(body.defaultCuisineTags) ? body.defaultCuisineTags : [],
   });
   return NextResponse.json(event, { status: 201 });
 }

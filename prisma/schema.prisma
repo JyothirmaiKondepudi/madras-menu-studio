@@ -39,6 +39,12 @@ model Event {
   tradition       String?          // "hindu" | "muslim" | "christian" | "other"
   startDate       DateTime         @map("start_date")
   endDate         DateTime         @map("end_date")
+  // The event's "usual" cuisine combo — most occasions in an event share
+  // the same cuisine, confirmed with the user, so this is a real default,
+  // not just a suggestion. Each Occasion gets its own cuisineTags,
+  // prefilled from this and freely overridable per-service. Replaces the
+  // CuisineProfile-picking flow entirely (see cuisineProfiles below).
+  defaultCuisineTags String[]       @default([]) @map("default_cuisine_tags")
   cuisineProfiles CuisineProfile[]
   occasions       Occasion[]
   createdAt       DateTime         @default(now()) @map("created_at")
@@ -73,10 +79,17 @@ model Occasion {
   id               String                @id @default(uuid())
   eventId          String                @map("event_id")
   event            Event                 @relation(fields: [eventId], references: [id])
-  cuisineProfileId String?               @map("cuisine_profile_id")
+  cuisineProfileId String?               @map("cuisine_profile_id") // legacy, unused — see cuisineTags
   cuisineProfile   CuisineProfile?       @relation(fields: [cuisineProfileId], references: [id])
-  priceTierId      String?               @map("price_tier_id")
+  // This occasion's actual cuisine tags — prefilled from Event.defaultCuisineTags
+  // in the UI, but stored per-occasion so a specific service can override it
+  // (e.g. one sangeet wants Italian mixed in while the rest of the event
+  // doesn't). Replaces cuisineProfileId as what MenuGenerator reads.
+  cuisineTags      String[]              @default([]) @map("cuisine_tags")
+  priceTierId      String?               @map("price_tier_id") // legacy/preset-prefill only — see min/maxPricePerPerson
   priceTier        PriceTier?            @relation(fields: [priceTierId], references: [id])
+  minPricePerPerson Decimal?             @map("min_price_per_person") @db.Decimal(8, 2)
+  maxPricePerPerson Decimal?             @map("max_price_per_person") @db.Decimal(8, 2)
   dayNumber        Int                   @map("day_number")
   sequenceOrder    Int                   @map("sequence_order") // generation order — feeds the no-repeat ledger
   occasionType     String                @map("occasion_type") // welcome_dinner | breakfast | mehndi | sangeet | wedding_lunch | cocktail_hour | dinner_reception | late_night_snacks
@@ -85,7 +98,8 @@ model Occasion {
   serviceType      String?               @map("service_type") // plated | buffet | family_style | stations
   serviceTime      DateTime?             @map("service_time")
   atmosphere       String?
-  vegNonvegRatio   String?               @map("veg_nonveg_ratio")
+  vegNonvegRatio   String?               @map("veg_nonveg_ratio") // legacy, unused — see dietaryPreferences
+  dietaryPreferences String[]           @default([]) @map("dietary_preferences") // e.g. ["vegetarian","jain"] — multiple allowed at once
   liveStations     LiveStation[]
   generatedOptions GeneratedMenuOption[]
   createdAt        DateTime              @default(now()) @map("created_at")
@@ -101,7 +115,8 @@ model LiveStation {
   vegNonveg       String     @map("veg_nonveg") // "veg" | "nonveg" | "both"
   pricePerPerson  Decimal    @map("price_per_person") @db.Decimal(8, 2)
   equipmentNeeded String[]   @default([]) @map("equipment_needed")
-  occasions       Occasion[] // implicit many-to-many
+  occasions       Occasion[] // implicit many-to-many — which occasions offer this station
+  generatedMenuOptions GeneratedMenuOption[] // implicit many-to-many — which generated options include it
 
   @@map("live_stations")
 }
@@ -113,6 +128,11 @@ model GeneratedMenuOption {
   optionNumber           Int                       @map("option_number") // 1, 2, or 3
   computedPricePerPerson Decimal?                  @map("computed_price_per_person") @db.Decimal(8, 2)
   items                  GeneratedMenuOptionItem[]
+  // Every selected live station shows up in all 3 tiers identically (a
+  // service decision, not a budget-driven pick — confirmed with user) and
+  // its price is added on top of computedPricePerPerson, not counted
+  // against the tier's target (see generate/route.ts).
+  liveStations           LiveStation[]
   createdAt              DateTime                  @default(now()) @map("created_at")
 
   @@map("generated_menu_options")
