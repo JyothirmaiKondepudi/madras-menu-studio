@@ -12,18 +12,20 @@ export async function createEvent(data: {
   tradition?: string | null;
   startDate: Date;
   endDate: Date;
+  defaultCuisineTags?: string[];
 }) {
   return prisma.event.create({ data });
 }
 
-// Includes everything an event detail page needs in one query: its cuisine
-// profiles, and its occasions in generation order (sequenceOrder matters —
-// that's the order the no-repeat ledger fills in).
+// Includes everything an event detail page needs in one query: its
+// occasions in generation order (sequenceOrder matters — that's the order
+// the no-repeat ledger fills in). No longer includes cuisineProfiles —
+// the hero label now reads defaultCuisineTags directly (a plain scalar
+// on Event itself, always present, no include needed).
 export async function getEventWithDetails(id: string) {
   return prisma.event.findUnique({
     where: { id },
     include: {
-      cuisineProfiles: true,
       occasions: { orderBy: { sequenceOrder: "asc" } },
     },
   });

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEventWithDetails } from "@/src/server/services/eventService";
-import { listPriceTiers } from "@/src/server/services/priceTierService";
 import { listDistinctCuisineTags } from "@/src/server/services/menuItemService";
+import { listLiveStations } from "@/src/server/services/liveStationService";
 import { formatDate } from "@/src/lib/formatDate";
 import { formatSlug } from "@/src/lib/formatSlug";
 import DayColumnsBoard from "./DayColumnsBoard";
@@ -17,14 +17,16 @@ export default async function EventDetailPage({
   const event = await getEventWithDetails(id);
   if (!event) notFound();
 
-  const priceTiers = await listPriceTiers();
   const availableCuisineTags = await listDistinctCuisineTags();
-  const plainPriceTiers = priceTiers.map((t) => ({
-    id: t.id,
-    name: t.name,
-    occasionType: t.occasionType,
-    serviceStyle: t.serviceStyle,
-    basePerPerson: Number(t.basePerPerson),
+  const liveStations = await listLiveStations();
+  // Decimal can't cross the Server -> Client Component props boundary
+  // (learned earlier this session, same fix as PriceTier before it).
+  const plainLiveStations = liveStations.map((s) => ({
+    id: s.id,
+    name: s.name,
+    region: s.region,
+    vegNonveg: s.vegNonveg,
+    pricePerPerson: Number(s.pricePerPerson),
   }));
 
   // Day count is not purely date-derived — it also grows with the highest
@@ -37,12 +39,11 @@ export default async function EventDetailPage({
   const maxOccasionDay = event.occasions.reduce((max, o) => Math.max(max, o.dayNumber), 0);
   const totalDays = Math.max(dateDerivedDays, maxOccasionDay, 1);
 
-  // The schema deliberately allows an Event to carry more than one
-  // CuisineProfile (a fusion wedding can mix cuisines across occasions —
-  // see CLAUDE.md) — the reference mockup assumes one label per event, so
-  // this joins whatever profiles exist into a single line rather than
-  // forcing the data model back down to "one cuisine per event."
-  const cuisineLabel = event.cuisineProfiles.map((p) => p.name).join(" + ");
+  // Replaces the old CuisineProfile-derived label — defaultCuisineTags is
+  // now a plain array directly on Event (the event's "usual" cuisine,
+  // confirmed with the user as mostly-shared across its occasions), so the
+  // hero label is just those tags formatted and joined.
+  const cuisineLabel = event.defaultCuisineTags.map((t) => formatSlug(t)).join(" + ");
 
   return (
     <div className="page">
@@ -71,9 +72,9 @@ export default async function EventDetailPage({
         eventId={event.id}
         totalDays={totalDays}
         occasions={event.occasions}
-        cuisineProfiles={event.cuisineProfiles}
-        priceTiers={plainPriceTiers}
+        defaultCuisineTags={event.defaultCuisineTags}
         availableCuisineTags={availableCuisineTags}
+        liveStations={plainLiveStations}
       />
     </div>
   );

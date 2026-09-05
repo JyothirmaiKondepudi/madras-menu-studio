@@ -3,16 +3,16 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { CuisineProfile, Occasion } from "@prisma/client";
+import type { Occasion } from "@prisma/client";
 import { formatSlug } from "@/src/lib/formatSlug";
 import AddOccasionModal from "./AddOccasionModal";
 
-type PlainPriceTier = {
+type PlainLiveStation = {
   id: string;
   name: string;
-  occasionType: string;
-  serviceStyle: string;
-  basePerPerson: number;
+  region: string;
+  vegNonveg: string;
+  pricePerPerson: number;
 };
 
 // One card's width + the flex gap between cards, in px — matches
@@ -28,16 +28,16 @@ export default function DayColumnsBoard({
   eventId,
   totalDays,
   occasions,
-  cuisineProfiles,
-  priceTiers,
+  defaultCuisineTags,
   availableCuisineTags,
+  liveStations,
 }: {
   eventId: string;
   totalDays: number;
   occasions: Occasion[];
-  cuisineProfiles: CuisineProfile[];
-  priceTiers: PlainPriceTier[];
+  defaultCuisineTags: string[];
   availableCuisineTags: string[];
+  liveStations: PlainLiveStation[];
 }) {
   const router = useRouter();
   const [openDay, setOpenDay] = useState<number | null>(null);
@@ -184,8 +184,9 @@ export default function DayColumnsBoard({
         <AddOccasionModal
           eventId={eventId}
           dayNumber={openDay}
-          cuisineProfiles={cuisineProfiles}
-          priceTiers={priceTiers}
+          defaultCuisineTags={defaultCuisineTags}
+          availableCuisineTags={availableCuisineTags}
+          liveStations={liveStations}
           nextSequenceOrder={nextSequenceOrder}
           onClose={() => setOpenDay(null)}
         />
