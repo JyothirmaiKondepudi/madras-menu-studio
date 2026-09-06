@@ -41,6 +41,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <span className="site-brand-mark">✺</span> Madras Menu Studio
           </Link>
           <span className="site-tagline">Menu planning for Madras Catering</span>
+          {/* /review had no way to reach it except typing the URL directly
+              (found by the user trying to hand the link to a customer) —
+              a plain nav link, same unauthenticated status as everywhere
+              else until real auth exists. */}
+          <Link href="/review" className="site-nav-link">Review Menu Items</Link>
           {/* Visual placeholders only — no auth wired up yet (deliberate,
               see the plan doc: real Auth.js login is its own later session). */}
           <div className="site-auth">

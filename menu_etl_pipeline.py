@@ -536,13 +536,28 @@ def cmd_aggregate(args):
     out_dir.mkdir(parents=True, exist_ok=True)
 
     all_items = []  # flat list, one row per (item, source menu)
+    skipped_malformed = []
     for jf in sorted(in_dir.glob("*.json")):
         # encoding="utf-8" required to match cmd_extract's write — same
         # missing-default issue as the dish_review.csv write below.
         data = json.loads(jf.read_text(encoding="utf-8"))
         source_doc = data.get("_source_doc", jf.stem)
-        for menu in data.get("menus", []):
+        menus = data.get("menus", [])
+        # Rare model quirk (found in real data, ~0.2% of a large batch): the
+        # tool call occasionally returns "menus" as a JSON-encoded *string*
+        # instead of a real nested array. Iterating a string yields its
+        # individual characters, not menu objects — skip the whole doc
+        # rather than crash the batch or silently treat characters as menus.
+        if not isinstance(menus, list):
+            skipped_malformed.append(source_doc)
+            continue
+        for menu in menus:
+            if not isinstance(menu, dict):
+                skipped_malformed.append(source_doc)
+                continue
             for item in menu.get("items", []):
+                if not isinstance(item, dict):
+                    continue
                 all_items.append({
                     **item,
                     "source_doc": source_doc,
@@ -551,6 +566,8 @@ def cmd_aggregate(args):
                 })
 
     print(f"Loaded {len(all_items)} raw item mentions from {len(list(in_dir.glob('*.json')))} docs")
+    if skipped_malformed:
+        print(f"Skipped {len(skipped_malformed)} malformed menu entries (needs re-extraction): {skipped_malformed}")
 
     # Fuzzy-dedupe by normalized name, merging tags/sources, keeping the
     # highest-confidence veg/nonveg + course call across duplicates.

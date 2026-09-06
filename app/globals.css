@@ -105,6 +105,26 @@ a:hover { color: var(--color-gold); }
   display: flex;
   gap: 0.6rem;
 }
+/* .btn-outline alone isn't enough here — its padding/border-radius/cursor
+   come from the bare `button {}` rule below, which only targets real
+   <button> elements. This is a <Link> (renders as <a>), so it needs the
+   full button shape defined directly instead of assuming .btn-outline
+   carries it. */
+.site-nav-link {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  color: var(--color-text);
+  transition: background 0.12s ease;
+}
+.site-nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
 .btn-outline {
   background: transparent;
   border: 1px solid var(--color-border);
