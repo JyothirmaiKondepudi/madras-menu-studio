@@ -133,71 +133,83 @@ export default function ReviewCard({ item }: { item: DraftItem }) {
     });
   }
 
-  if (editing) {
-    return (
-      <div className="entity-card">
-        <form onSubmit={handleSaveEdit} className="field-grid">
-          <label className="field-full">
-            Name
-            <input value={name} onChange={(e) => setName(e.target.value)} required />
-          </label>
-          <label>
-            Course
-            <CustomSelect value={course} onChange={setCourse} options={COURSES.map((c) => ({ value: c, label: formatSlug(c) }))} />
-          </label>
-          <label>
-            Veg / Non-veg
-            <CustomSelect value={vegNonveg} onChange={setVegNonveg} options={VEG_NONVEG.map((v) => ({ value: v, label: formatSlug(v) }))} />
-          </label>
-          <label>
-            Price Weight
-            <CustomSelect value={priceWeight} onChange={setPriceWeight} options={PRICE_WEIGHTS.map((p) => ({ value: p, label: formatSlug(p) }))} />
-          </label>
-          <label>
-            Spice Level
-            <CustomSelect value={spiceLevel} onChange={setSpiceLevel} options={SPICE_LEVELS.map((s) => ({ value: s, label: formatSlug(s) }))} placeholder="None" />
-          </label>
-          <label>
-            Prep Method
-            <input value={prepMethod} onChange={(e) => setPrepMethod(e.target.value)} placeholder="e.g. fried, tandoor" />
-          </label>
-          <label className="tag-picklist-any">
-            <input type="checkbox" checked={isStaple} onChange={(e) => setIsStaple(e.target.checked)} />
-            Staple (exempt from the no-repeat ledger)
-          </label>
-          <ChipToggleGroup label="Cuisine Tags" options={CUISINE_TAGS} selected={cuisineTags} onToggle={(v) => toggle(cuisineTags, setCuisineTags, v)} />
-          <ChipToggleGroup label="Allergens" options={ALLERGENS} selected={allergens} onToggle={(v) => toggle(allergens, setAllergens, v)} />
-          <ChipToggleGroup label="Dietary Flags" options={DIETARY_FLAGS} selected={dietaryFlags} onToggle={(v) => toggle(dietaryFlags, setDietaryFlags, v)} />
-          <ChipToggleGroup label="Religion Suitability" options={RELIGION_SUITABILITY} selected={religionSuitability} onToggle={(v) => toggle(religionSuitability, setReligionSuitability, v)} />
-          <ChipToggleGroup label="Occasion Suitability" options={OCCASION_SUITABILITY} selected={occasionSuitability} onToggle={(v) => toggle(occasionSuitability, setOccasionSuitability, v)} />
-          <div className="field-full" style={{ display: "flex", gap: "0.6rem" }}>
-            <button type="submit" disabled={submitting}>{submitting ? "Saving..." : "Save & Mark Edited"}</button>
-            <button type="button" className="btn-outline" onClick={() => setEditing(false)} disabled={submitting}>Cancel</button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-
+  // Editing used to swap the whole card for an inline form, cramped into
+  // the same ~250px card-grid cell it was already too small for (found
+  // directly from a screenshot, same session as the button-overflow fix).
+  // A page-centered modal — same component AddOccasionModal already uses
+  // (.modal-overlay/.modal-box/.modal-header) — gives it real room
+  // regardless of how narrow the grid cell is.
   return (
-    <div className="entity-card">
-      <div className="entity-card-title">
-        <span className={`diet-dot ${item.vegNonveg}`} />
-        {item.name}
+    <>
+      <div className="entity-card">
+        <div className="entity-card-title">
+          <span className={`diet-dot ${item.vegNonveg}`} />
+          {item.name}
+        </div>
+        <div className="entity-card-meta">
+          {formatSlug(item.course)} · {item.confidence ? `${formatSlug(item.confidence)} confidence` : "Confidence unknown"}
+          {item.reviewStatus !== "pending" && <> · <strong>{formatSlug(item.reviewStatus)}</strong></>}
+        </div>
+        <div className="chip-row">
+          {item.cuisineTags.map((t) => <span key={t} className="chip">{formatSlug(t)}</span>)}
+          {item.isStaple && <span className="chip"><strong>Staple</strong></span>}
+        </div>
+        <div className="review-actions">
+          <button className="btn-compact" onClick={handleApprove} disabled={submitting}>Approve</button>
+          <button className="btn-compact btn-danger" onClick={handleReject} disabled={submitting}>Reject</button>
+          <button className="btn-compact btn-outline" onClick={() => setEditing(true)} disabled={submitting}>Edit</button>
+        </div>
       </div>
-      <div className="entity-card-meta">
-        {formatSlug(item.course)} · {item.confidence ? `${formatSlug(item.confidence)} confidence` : "Confidence unknown"}
-        {item.reviewStatus !== "pending" && <> · <strong>{formatSlug(item.reviewStatus)}</strong></>}
-      </div>
-      <div className="chip-row">
-        {item.cuisineTags.map((t) => <span key={t} className="chip">{formatSlug(t)}</span>)}
-        {item.isStaple && <span className="chip"><strong>Staple</strong></span>}
-      </div>
-      <div className="field-full" style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-        <button onClick={handleApprove} disabled={submitting}>Approve</button>
-        <button className="btn-danger" onClick={handleReject} disabled={submitting}>Reject</button>
-        <button className="btn-outline" onClick={() => setEditing(true)} disabled={submitting}>Edit</button>
-      </div>
-    </div>
+
+      {editing && (
+        <div className="modal-overlay" onClick={() => setEditing(false)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Edit — {item.name}</h3>
+              <button type="button" className="modal-close" onClick={() => setEditing(false)}>×</button>
+            </div>
+            <form onSubmit={handleSaveEdit} className="field-grid">
+              <label className="field-full">
+                Name
+                <input value={name} onChange={(e) => setName(e.target.value)} required />
+              </label>
+              <label>
+                Course
+                <CustomSelect value={course} onChange={setCourse} options={COURSES.map((c) => ({ value: c, label: formatSlug(c) }))} />
+              </label>
+              <label>
+                Veg / Non-veg
+                <CustomSelect value={vegNonveg} onChange={setVegNonveg} options={VEG_NONVEG.map((v) => ({ value: v, label: formatSlug(v) }))} />
+              </label>
+              <label>
+                Price Weight
+                <CustomSelect value={priceWeight} onChange={setPriceWeight} options={PRICE_WEIGHTS.map((p) => ({ value: p, label: formatSlug(p) }))} />
+              </label>
+              <label>
+                Spice Level
+                <CustomSelect value={spiceLevel} onChange={setSpiceLevel} options={SPICE_LEVELS.map((s) => ({ value: s, label: formatSlug(s) }))} placeholder="None" />
+              </label>
+              <label>
+                Prep Method
+                <input value={prepMethod} onChange={(e) => setPrepMethod(e.target.value)} placeholder="e.g. fried, tandoor" />
+              </label>
+              <label className="tag-picklist-any">
+                <input type="checkbox" checked={isStaple} onChange={(e) => setIsStaple(e.target.checked)} />
+                Staple (exempt from the no-repeat ledger)
+              </label>
+              <ChipToggleGroup label="Cuisine Tags" options={CUISINE_TAGS} selected={cuisineTags} onToggle={(v) => toggle(cuisineTags, setCuisineTags, v)} />
+              <ChipToggleGroup label="Allergens" options={ALLERGENS} selected={allergens} onToggle={(v) => toggle(allergens, setAllergens, v)} />
+              <ChipToggleGroup label="Dietary Flags" options={DIETARY_FLAGS} selected={dietaryFlags} onToggle={(v) => toggle(dietaryFlags, setDietaryFlags, v)} />
+              <ChipToggleGroup label="Religion Suitability" options={RELIGION_SUITABILITY} selected={religionSuitability} onToggle={(v) => toggle(religionSuitability, setReligionSuitability, v)} />
+              <ChipToggleGroup label="Occasion Suitability" options={OCCASION_SUITABILITY} selected={occasionSuitability} onToggle={(v) => toggle(occasionSuitability, setOccasionSuitability, v)} />
+              <div className="field-full" style={{ display: "flex", gap: "0.6rem" }}>
+                <button type="submit" disabled={submitting}>{submitting ? "Saving..." : "Save & Mark Edited"}</button>
+                <button type="button" className="btn-outline" onClick={() => setEditing(false)} disabled={submitting}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

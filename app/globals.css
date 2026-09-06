@@ -143,6 +143,23 @@ a:hover { color: var(--color-gold); }
 .btn-danger:hover {
   background: rgba(214, 69, 69, 0.12);
 }
+/* Review card actions (Approve/Reject/Edit) — three buttons in a
+   250px-minimum card overflowed the card edge at the default button size
+   (0.55rem/1.2rem padding, 700 weight, from the bare `button {}` rule) —
+   found directly from a screenshot. `flex-wrap` is a safety net so a
+   button wraps to its own line instead of getting clipped at the card
+   boundary if it ever doesn't fit, even at this smaller size. */
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.btn-compact {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 
 .site-body {
   flex: 1;
