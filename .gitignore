@@ -55,3 +55,9 @@ dist/
 
 # Raw source documents (proprietary business content, unzipped locally)
 /menus-source
+
+# Pre-fix ETL backup — old extraction output set aside during a bugfix,
+# same proprietary-content sensitivity as menus-source/extracted/seed above.
+# Got accidentally committed to a public branch once already (Sept 2026) —
+# never again.
+/extracted_stale_pre_fix_backup

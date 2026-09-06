@@ -10,11 +10,40 @@ Categorization (cuisine, occasion, price tier, tax category, etc.) happens
 in plain Python during the aggregate step below — no separate SQL
 transformation layer needed at this data volume.
 
-Three stages, run separately so a crash/rerun never re-pays for docs already done:
+Six stages, run separately so a crash/rerun never re-pays for docs already done:
 
-    python menu_etl_pipeline.py extract   --input ./menus --output ./extracted
+    python menu_etl_pipeline.py curate    --input ./menus-source/raw --output ./menus-source/curated
+    python menu_etl_pipeline.py extract   --input ./menus-source/curated --output ./extracted
     python menu_etl_pipeline.py aggregate --input ./extracted --output ./seed
     python menu_etl_pipeline.py load      --input ./seed --database-url $DATABASE_URL
+    python menu_etl_pipeline.py stage     --input ./seed --database-url $DATABASE_URL
+    python menu_etl_pipeline.py promote   --database-url $DATABASE_URL
+
+`load` and `stage`/`promote` are two alternative review paths for the same
+aggregate output, not a required sequence — use whichever review method fits:
+`load` goes straight from a human-reviewed `dish_review.csv` (opened in
+Excel) into the live `menu_items` table. `stage` instead pushes aggregate's
+output into `menu_item_drafts` (review_status='pending') for review through
+the app's own /review web page (card grid, approve/reject/edit) instead of a
+spreadsheet; `promote` then upserts whatever got approved/edited there into
+the same live `menu_items` table `load` targets directly. Nothing not
+explicitly reviewed in either path ever reaches menu_items.
+
+`curate` exists because a real source archive (e.g. a Google Drive export
+going back over a decade) is not just menus — it's mixed in with plain junk
+(0-byte files, Word `~$` lock files), exact-duplicate copies of the same
+doc saved under different names/folders, and documents that are real files
+but never contain a menu at all (insurance certificates, W-9s, name-tag
+templates, floor plans, rental-equipment lists). Every one of those still
+costs a full `extract` API call if not filtered out first, for nothing.
+Deliberately NOT filtered by filename category (e.g. "invoice"-sounding
+names): real per-event menus have turned up under invoice/pickup/plain
+client-name filenames in this archive, so category guesses are excluded
+only when the category itself could never contain food content — see
+CURATE_EXCLUDE_PATTERNS below. Everything else, however unpromising the
+name looks, goes on to `extract` and lets the actual extraction call decide
+(cheaply — a doc with no real menu just comes back with an empty `menus`
+list).
 
 Requires:
     pip install anthropic python-docx pdfplumber rapidfuzz psycopg2-binary python-dotenv
@@ -40,6 +69,7 @@ controlled cuisine-tag vocabulary, handles that variance directly.
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -122,7 +152,6 @@ EXTRACTION_SCHEMA = {
                                 "type": "object",
                                 "properties": {
                                     "name": {"type": "string", "description": "Dish name, cleaned of stray formatting/asterisks."},
-                                    "section": {"type": "string", "description": "The heading it appeared under in the source doc, verbatim, e.g. 'Appetizer Station'."},
                                     "course": {"type": "string", "enum": COURSES},
                                     "veg_nonveg_guess": {"type": "string", "enum": ["veg", "nonveg", "unclear"]},
                                     "cuisine_tags_guess": {"type": "array", "items": {"type": "string", "enum": CUISINE_TAGS}},
@@ -254,8 +283,216 @@ def call_claude_extract(client, filename: str, doc_text: str) -> dict:
     raise RuntimeError(f"No structured extraction returned for {filename}")
 
 
+# Title patterns for docs that are near-certainly not food content at all —
+# kept deliberately narrow (a specific document category, not a vague
+# keyword) to minimize the risk of dropping a real menu. Notably does NOT
+# include anything like "invoice" or a plain client/pickup name: real
+# per-event menus have turned up under exactly those filenames in this
+# archive, so category alone can't be trusted to exclude them — only
+# `extract`'s actual per-doc read of the content can.
+CURATE_EXCLUDE_PATTERNS = [
+    (r"credit.?card.?authoriz", "payment authorization form"),
+    (r"\bw[-\s]?9\b", "tax form (W-9)"),
+    (r"certificate.?of.?insurance|\bcoi\b|insurance.?cert", "insurance certificate"),
+    (r"\bcontact.?list\b", "contact list"),
+    (r"\bname.?tags?\b|\bplace.?cards?\b|\bnametags?\b", "name tag / place card template"),
+    (r"\blogo(s)?\b", "logo file"),
+    (r"^new microsoft word document", "blank/default Word filename"),
+    (r"cutlery|glassware|linen[s]?\b.*(rental|hire)|china\s*,\s*tables", "rental equipment list"),
+    (r"\bbusiness\s+card", "business card"),
+    (r"\bflyer\b|\badvertisement\b|\bmarketing\b", "marketing collateral"),
+    (r"\bfloor\s*plan\b|\bseating\s*chart\b", "floor plan / seating chart"),
+]
+
+
+def _curate_title_exclude_reason(name: str):
+    low = name.lower()
+    for pattern, reason in CURATE_EXCLUDE_PATTERNS:
+        if re.search(pattern, low):
+            return reason
+    return None
+
+
+_PREP_LIST_QTY_WORDS = re.compile(r"\b(pax|hotel\s*pan|hotel\s*paan|tray|case|bucket|packet|pouch)\b", re.I)
+_PREP_LIST_DIVIDER = re.compile(r"\*{3,}")
+
+
+def _looks_like_prep_list(text: str) -> bool:
+    has_dollar = "$" in text
+    qty_hits = len(_PREP_LIST_QTY_WORDS.findall(text))
+    has_divider_structure = bool(_PREP_LIST_DIVIDER.search(text))
+    return (not has_dollar) and qty_hits >= 2 and (not has_divider_structure)
+
+
+def cmd_curate(args):
+    """Turn a raw source archive into a curated folder safe to hand to
+    `extract` — strips true junk, collapses exact-duplicate copies, and
+    drops only the document categories that could never contain a menu.
+    Never modifies or deletes anything under --input; --output is built
+    fresh each run (deterministic, so re-running after --input changes is
+    always safe)."""
+    import hashlib
+    import shutil
+    from collections import defaultdict
+
+    in_dir = Path(args.input)
+    out_dir = Path(args.output)
+
+    all_files = sorted(p for p in in_dir.rglob("*") if p.suffix.lower() in (".docx", ".pdf"))
+    print(f"Found {len(all_files)} documents under {in_dir}")
+
+    # 1. Junk: 0-byte files and Word's own "~$..." lock/temp files (created
+    # while a doc is open in Word) — neither has any real content.
+    junk = [p for p in all_files if p.name.startswith("~$") or p.stat().st_size == 0]
+    junk_set = set(junk)
+    real_files = [p for p in all_files if p not in junk_set]
+    print(f"Junk (lock files / 0-byte): {len(junk)}")
+
+    # 2. Exact-duplicate content, by hash — a real source archive commonly
+    # has the same doc saved under multiple names/folders/years. Keep one
+    # per identical-content group, preferring the copy whose name has no
+    # "(2)"-style suffix, else the shortest path.
+    def file_hash(p: Path) -> str:
+        h = hashlib.sha1()
+        with open(p, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+        return h.hexdigest()
+
+    by_hash = defaultdict(list)
+    for p in real_files:
+        by_hash[file_hash(p)].append(p)
+
+    def pick_keeper(paths):
+        no_paren = [p for p in paths if "(" not in p.stem]
+        pool = no_paren if no_paren else paths
+        return min(pool, key=lambda p: len(str(p)))
+
+    deduped = []
+    dropped_dupes = []
+    for group in by_hash.values():
+        if len(group) == 1:
+            deduped.append(group[0])
+        else:
+            keep = pick_keeper(group)
+            deduped.append(keep)
+            dropped_dupes.extend(p for p in group if p != keep)
+    print(f"Exact-duplicate copies dropped: {len(dropped_dupes)}")
+
+    # 3. Title-based exclusion — only the categories in
+    # CURATE_EXCLUDE_PATTERNS, deliberately conservative (see its comment).
+    after_title = []
+    title_flagged = []
+    for p in deduped:
+        reason = _curate_title_exclude_reason(p.name)
+        if reason:
+            title_flagged.append((p, reason))
+        else:
+            after_title.append(p)
+    print(f"Flagged as 'not menu-related' by title: {len(title_flagged)}")
+
+    # 4. Content-based exclusion: internal kitchen prep/quantity notes
+    # ("Onion bhji  300", truck equipment checklists) rather than a real
+    # client-facing menu. Unlike the title check, this reads actual doc
+    # text — no dollar sign anywhere (real priced menus in this archive
+    # almost always show pricing) + 2+ portion/quantity words (pax, hotel
+    # pan, tray, case, bucket, packet, pouch) + none of this company's own
+    # real-menu formatting convention (repeated "***"-style dividers
+    # between items — see EXTRACTION_PROMPT). That third condition exists
+    # because the first two alone caught a real, well-formatted wedding-
+    # celebration menu that used "hotel pan" for live-station quantities
+    # and had no literal "$" in this copy — found by spot-checking a
+    # sample before trusting the count, same as the title filter.
+    kept = []
+    prep_list_flagged = []
+    for p in after_title:
+        try:
+            text = extract_text(p)
+        except Exception:
+            kept.append(p)  # let extract's own error handling deal with it
+            continue
+        if _looks_like_prep_list(text):
+            prep_list_flagged.append(p)
+        else:
+            kept.append(p)
+    print(f"Flagged as internal prep/quantity note (not a menu): {len(prep_list_flagged)}")
+    print(f"Final curated set: {len(kept)}")
+
+    # Build --output fresh every run rather than incrementally patching it,
+    # so it can never drift from what --input + these rules actually say.
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True)
+    for p in kept:
+        rel = p.relative_to(in_dir)
+        dest = out_dir / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(p, dest)
+
+    report = {
+        "input": str(in_dir),
+        "output": str(out_dir),
+        "total_files": len(all_files),
+        "junk_count": len(junk),
+        "junk_files": sorted(str(p.relative_to(in_dir)) for p in junk),
+        "duplicate_dropped_count": len(dropped_dupes),
+        "duplicate_dropped_files": sorted(str(p.relative_to(in_dir)) for p in dropped_dupes),
+        "title_flagged_count": len(title_flagged),
+        "title_flagged_files": sorted(
+            [{"path": str(p.relative_to(in_dir)), "reason": r} for p, r in title_flagged],
+            key=lambda d: (d["reason"], d["path"]),
+        ),
+        "prep_list_flagged_count": len(prep_list_flagged),
+        "prep_list_flagged_files": sorted(str(p.relative_to(in_dir)) for p in prep_list_flagged),
+        "kept_count": len(kept),
+    }
+    report_path = out_dir.parent / "curation_report.json"
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"\nCuration report written to: {report_path}")
+    print(f"Curated set ready at: {out_dir}")
+
+
+def _extract_one(client, in_dir: Path, out_dir: Path, path: Path) -> str:
+    """Extract a single doc; returns a short status line. Never raises —
+    every failure mode (bad file, API error, empty text) is caught here so
+    one bad doc can't kill the rest of a concurrent batch."""
+    import hashlib
+    rel = path.relative_to(in_dir)
+    # Two different source subfolders can each contain a file with the same
+    # stem (e.g. "Menu 1.docx" under both a 2016/ and a 2018/ folder) —
+    # stem-only output naming would collide and overwrite one's extraction.
+    # Prefixing with a short hash of the full relative path keeps every
+    # doc's output distinct while staying resumable (same input path always
+    # hashes to the same output file).
+    digest = hashlib.sha1(str(rel).encode()).hexdigest()[:8]
+    out_path = out_dir / f"{path.stem}_{digest}.json"
+    if out_path.exists():
+        return f"skip (already extracted): {rel}"
+    try:
+        text = extract_text(path)
+        if not text.strip():
+            return f"empty text, skipping: {rel}"
+        result = call_claude_extract(client, path.name, text)
+        # Full relative path, not just the filename — two different source
+        # subfolders can share a filename, and this is what ends up in each
+        # dish's traceable source_docs list later.
+        result["_source_doc"] = str(rel)
+        # encoding="utf-8" required — Path.write_text() otherwise falls back
+        # to the system locale codepage (cp1252 on Windows), same root
+        # cause as the dish_review.csv write below.
+        out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        return f"done: {rel}"
+    except Exception as e:
+        return f"FAILED: {rel} -> {e}"
+
+
 def cmd_extract(args):
     import anthropic
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    # One client shared across worker threads — the SDK's underlying HTTP
+    # client is safe for concurrent use (each call is an independent
+    # request), so this doesn't need a client-per-thread.
     client = anthropic.Anthropic()
 
     in_dir = Path(args.input)
@@ -269,39 +506,19 @@ def cmd_extract(args):
     files = sorted([p for p in in_dir.rglob("*") if p.suffix.lower() in (".docx", ".pdf")])
     print(f"Found {len(files)} documents under {in_dir}")
 
-    for i, path in enumerate(files, 1):
-        # Two different source subfolders can each contain a file with the
-        # same stem (e.g. "Menu 1.docx" under both a 2016/ and a 2018/
-        # folder) — stem-only output naming would collide and overwrite
-        # one's extraction. Prefixing with a short hash of the full
-        # relative path keeps every doc's output distinct while staying
-        # resumable (same input path always hashes to the same output file).
-        import hashlib
-        rel = path.relative_to(in_dir)
-        digest = hashlib.sha1(str(rel).encode()).hexdigest()[:8]
-        out_path = out_dir / f"{path.stem}_{digest}.json"
-        if out_path.exists():
-            print(f"[{i}/{len(files)}] skip (already extracted): {rel}")
-            continue
-        print(f"[{i}/{len(files)}] extracting: {rel}")
-        try:
-            text = extract_text(path)
-            if not text.strip():
-                print(f"   -> empty text, skipping")
-                continue
-            result = call_claude_extract(client, path.name, text)
-            # Full relative path, not just the filename — two different
-            # source subfolders can share a filename, and this is what
-            # ends up in each dish's traceable source_docs list later.
-            result["_source_doc"] = str(rel)
-            # encoding="utf-8" required — Path.write_text() otherwise falls
-            # back to the system locale codepage (cp1252 on Windows), same
-            # root cause as the dish_review.csv write below.
-            out_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
-        except Exception as e:
-            print(f"   -> FAILED: {e}", file=sys.stderr)
-            # Don't let one bad doc kill the whole batch.
-            continue
+    # This is I/O-bound (waiting on the Claude API over the network), not
+    # CPU-bound, so a thread pool works fine despite the GIL — each file's
+    # extraction is fully independent (own API call, own uniquely-named
+    # output file), nothing shared to race on. Concurrency is deliberately
+    # modest by default to stay under typical per-account rate limits;
+    # raise --concurrency if your tier allows more.
+    done = 0
+    with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
+        futures = {pool.submit(_extract_one, client, in_dir, out_dir, p): p for p in files}
+        for future in as_completed(futures):
+            done += 1
+            status = future.result()
+            print(f"[{done}/{len(files)}] {status}")
         time.sleep(0.3)  # light rate-limit courtesy
 
     print(f"Done. Per-doc extractions in {out_dir}/")
@@ -523,9 +740,81 @@ def _strip_prisma_only_params(database_url: str) -> str:
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(kept), parts.fragment))
 
 
+def _ensure_tax_categories(cur) -> dict:
+    """Upsert the default tax categories and return {name: id} — every
+    upsert path (load/stage/promote) needs this same lookup, since dishes
+    reference a tax category by name, not id, until this resolves it."""
+    for name, jurisdiction, rate in DEFAULT_TAX_CATEGORIES:
+        cur.execute(
+            """
+            INSERT INTO tax_categories (id, name, jurisdiction, rate_percent, effective_date)
+            VALUES (gen_random_uuid(), %s, %s, %s, now())
+            ON CONFLICT (name) DO NOTHING
+            """,
+            (name, jurisdiction, rate),
+        )
+    cur.execute("SELECT id, name FROM tax_categories")
+    return {name: id_ for id_, name in cur.fetchall()}
+
+
+def _upsert_menu_item(cur, item: dict, tax_id_by_name: dict) -> None:
+    """Insert-or-update one dish into the live `menu_items` table, upserted
+    by its unique name. Shared by `load` (source: a human-reviewed CSV) and
+    `promote` (source: approved/edited MenuItemDraft rows) — both hand this
+    the same dict shape, so the actual SQL only needs to exist once."""
+    tax_category_id = tax_id_by_name.get(item.get("tax_category", "prepared_food"))
+    cur.execute(
+        """
+        INSERT INTO menu_items (
+            id, name, course, veg_nonveg, cuisine_tags, price_weight, is_staple,
+            allergens, dietary_flags, religion_suitability, occasion_suitability,
+            spice_level, prep_method, tax_category_id, confidence, source_docs,
+            active, created_at, updated_at
+        ) VALUES (
+            gen_random_uuid(), %(name)s, %(course)s, %(veg_nonveg)s, %(cuisine_tags)s, %(price_weight)s, %(is_staple)s,
+            %(allergens)s, %(dietary_flags)s, %(religion_suitability)s, %(occasion_suitability)s,
+            %(spice_level)s, %(prep_method)s, %(tax_category_id)s, %(confidence)s, %(source_docs)s,
+            true, now(), now()
+        )
+        ON CONFLICT (name) DO UPDATE SET
+            course = EXCLUDED.course,
+            veg_nonveg = EXCLUDED.veg_nonveg,
+            cuisine_tags = EXCLUDED.cuisine_tags,
+            price_weight = EXCLUDED.price_weight,
+            is_staple = EXCLUDED.is_staple,
+            allergens = EXCLUDED.allergens,
+            dietary_flags = EXCLUDED.dietary_flags,
+            religion_suitability = EXCLUDED.religion_suitability,
+            occasion_suitability = EXCLUDED.occasion_suitability,
+            spice_level = EXCLUDED.spice_level,
+            prep_method = EXCLUDED.prep_method,
+            tax_category_id = EXCLUDED.tax_category_id,
+            confidence = EXCLUDED.confidence,
+            source_docs = EXCLUDED.source_docs,
+            updated_at = now()
+        """,
+        {
+            "name": item["name"],
+            "course": item["course"],
+            "veg_nonveg": item["veg_nonveg"],
+            "cuisine_tags": item["cuisine_tags"],
+            "price_weight": item["price_weight"],
+            "is_staple": item["is_staple"],
+            "allergens": item.get("allergens", []),
+            "dietary_flags": item.get("dietary_flags", []),
+            "religion_suitability": item.get("religion_suitability", ["any"]),
+            "occasion_suitability": item.get("occasion_suitability", ["any"]),
+            "spice_level": item.get("spice_level"),
+            "prep_method": item.get("prep_method"),
+            "tax_category_id": tax_category_id,
+            "confidence": item["confidence"],
+            "source_docs": item.get("example_sources", []),
+        },
+    )
+
+
 def cmd_load(args):
     import psycopg2
-    import psycopg2.extras
 
     review_path = Path(args.input) / "dish_review.csv"
     items = _read_reviewed_csv(review_path)
@@ -535,35 +824,53 @@ def cmd_load(args):
     conn.autocommit = False
     try:
         with conn.cursor() as cur:
-            # Tax categories first (menu_items references them by name).
-            for name, jurisdiction, rate in DEFAULT_TAX_CATEGORIES:
-                cur.execute(
-                    """
-                    INSERT INTO tax_categories (id, name, jurisdiction, rate_percent, effective_date)
-                    VALUES (gen_random_uuid(), %s, %s, %s, now())
-                    ON CONFLICT (name) DO NOTHING
-                    """,
-                    (name, jurisdiction, rate),
-                )
+            tax_id_by_name = _ensure_tax_categories(cur)
+            for item in items:
+                _upsert_menu_item(cur, item, tax_id_by_name)
+        conn.commit()
+        print(f"Loaded {len(items)} dishes into menu_items (upserted by unique name).")
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
-            cur.execute("SELECT id, name FROM tax_categories")
-            tax_id_by_name = {name: id_ for id_, name in cur.fetchall()}
 
+def cmd_stage(args):
+    """Push aggregate's output (menu_items_seed.json) into menu_item_drafts
+    — every dish starts life here as review_status='pending', never landing
+    in the live menu_items table until a human approves it through the
+    /review web UI and `promote` runs. Safe to re-run after a corrected
+    re-extraction: upserted by name, same as load/promote."""
+    import psycopg2
+
+    seed_path = Path(args.input) / "menu_items_seed.json"
+    items = json.loads(seed_path.read_text(encoding="utf-8"))
+    print(f"Staging {len(items)} dishes from {seed_path}")
+
+    conn = psycopg2.connect(_strip_prisma_only_params(args.database_url))
+    conn.autocommit = False
+    try:
+        with conn.cursor() as cur:
+            tax_id_by_name = _ensure_tax_categories(cur)
             for item in items:
                 tax_category_id = tax_id_by_name.get(item.get("tax_category", "prepared_food"))
                 cur.execute(
                     """
-                    INSERT INTO menu_items (
+                    INSERT INTO menu_item_drafts (
                         id, name, course, veg_nonveg, cuisine_tags, price_weight, is_staple,
                         allergens, dietary_flags, religion_suitability, occasion_suitability,
                         spice_level, prep_method, tax_category_id, confidence, source_docs,
-                        active, created_at, updated_at
+                        review_status, created_at, updated_at
                     ) VALUES (
                         gen_random_uuid(), %(name)s, %(course)s, %(veg_nonveg)s, %(cuisine_tags)s, %(price_weight)s, %(is_staple)s,
                         %(allergens)s, %(dietary_flags)s, %(religion_suitability)s, %(occasion_suitability)s,
                         %(spice_level)s, %(prep_method)s, %(tax_category_id)s, %(confidence)s, %(source_docs)s,
-                        true, now(), now()
+                        'pending', now(), now()
                     )
+                    -- Re-staging (e.g. a corrected re-extraction) resets the review back to
+                    -- pending rather than silently keeping a stale prior decision around —
+                    -- the content changed, so any earlier approve/reject no longer applies.
                     ON CONFLICT (name) DO UPDATE SET
                         course = EXCLUDED.course,
                         veg_nonveg = EXCLUDED.veg_nonveg,
@@ -579,6 +886,8 @@ def cmd_load(args):
                         tax_category_id = EXCLUDED.tax_category_id,
                         confidence = EXCLUDED.confidence,
                         source_docs = EXCLUDED.source_docs,
+                        review_status = 'pending',
+                        reviewed_at = NULL,
                         updated_at = now()
                     """,
                     {
@@ -595,12 +904,80 @@ def cmd_load(args):
                         "spice_level": item.get("spice_level"),
                         "prep_method": item.get("prep_method"),
                         "tax_category_id": tax_category_id,
-                        "confidence": item["confidence"],
+                        "confidence": item.get("confidence"),
                         "source_docs": item.get("example_sources", []),
                     },
                 )
         conn.commit()
-        print(f"Loaded {len(items)} dishes into menu_items (upserted by unique name).")
+        print(f"Staged {len(items)} dishes into menu_item_drafts (review_status='pending').")
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def cmd_promote(args):
+    """Take whatever the customer approved/edited at /review and upsert it
+    into the live menu_items table — the "tomorrow" batch step. Anything
+    still 'pending' or 'rejected' is left alone; nothing not explicitly
+    reviewed ever reaches the live menu-generation wizard."""
+    import psycopg2
+    import psycopg2.extras
+
+    conn = psycopg2.connect(_strip_prisma_only_params(args.database_url))
+    conn.autocommit = False
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            tax_id_by_name = _ensure_tax_categories(cur)
+            # Need the tax category's *name*, not its id, since _upsert_menu_item
+            # takes item["tax_category"] as a name and re-resolves the id itself.
+            id_to_tax_name = {id_: name for name, id_ in tax_id_by_name.items()}
+
+            cur.execute(
+                """
+                SELECT id, name, course, veg_nonveg, cuisine_tags, price_weight, is_staple,
+                       allergens, dietary_flags, religion_suitability, occasion_suitability,
+                       spice_level, prep_method, tax_category_id, confidence, source_docs
+                FROM menu_item_drafts
+                WHERE review_status IN ('approved', 'edited')
+                """
+            )
+            drafts = cur.fetchall()
+            print(f"Promoting {len(drafts)} approved/edited drafts to menu_items")
+
+            promoted_ids = []
+            for draft in drafts:
+                item = {
+                    "name": draft["name"],
+                    "course": draft["course"],
+                    "veg_nonveg": draft["veg_nonveg"],
+                    "cuisine_tags": draft["cuisine_tags"] or [],
+                    "price_weight": draft["price_weight"],
+                    "is_staple": draft["is_staple"],
+                    "allergens": draft["allergens"] or [],
+                    "dietary_flags": draft["dietary_flags"] or [],
+                    "religion_suitability": draft["religion_suitability"] or ["any"],
+                    "occasion_suitability": draft["occasion_suitability"] or ["any"],
+                    "spice_level": draft["spice_level"],
+                    "prep_method": draft["prep_method"],
+                    "tax_category": id_to_tax_name.get(draft["tax_category_id"], "prepared_food"),
+                    "confidence": draft["confidence"],
+                    "example_sources": draft["source_docs"] or [],
+                }
+                _upsert_menu_item(cur, item, tax_id_by_name)
+                promoted_ids.append(draft["id"])
+
+            if promoted_ids:
+                # Kept, not deleted — an audit trail of what this batch actually
+                # contained and what a human decided about it (see MenuItemDraft's
+                # schema.prisma comment).
+                cur.execute(
+                    "UPDATE menu_item_drafts SET review_status = 'promoted', updated_at = now() WHERE id = ANY(%s)",
+                    (promoted_ids,),
+                )
+        conn.commit()
+        print(f"Promoted {len(drafts)} dishes into menu_items; drafts marked 'promoted'.")
     except Exception:
         conn.rollback()
         raise
@@ -612,9 +989,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
 
+    p_curate = sub.add_parser("curate", help="Strip junk/duplicates/non-menu docs from a raw source archive before extract.")
+    p_curate.add_argument("--input", required=True, help="Folder of raw .docx/.pdf source documents (not modified).")
+    p_curate.add_argument("--output", required=True, help="Folder to write the curated copy into (rebuilt fresh each run).")
+    p_curate.set_defaults(func=cmd_curate)
+
     p_extract = sub.add_parser("extract", help="Run per-document LLM extraction (resumable, skips docs already done).")
     p_extract.add_argument("--input", required=True, help="Folder of .docx/.pdf menu documents.")
     p_extract.add_argument("--output", required=True, help="Folder to write one JSON file per source doc.")
+    p_extract.add_argument("--concurrency", type=int, default=5,
+                            help="How many docs to extract in parallel (default 5). Each is one Claude API "
+                                 "call over the network, so this is I/O-bound — raise it if your account's "
+                                 "rate limit allows more throughput.")
     p_extract.set_defaults(func=cmd_extract)
 
     p_agg = sub.add_parser("aggregate", help="Merge, dedupe, and produce the reviewable seed dataset.")
@@ -626,6 +1012,15 @@ def main():
     p_load.add_argument("--input", required=True, help="Folder containing dish_review.csv (the aggregate step's output, after your human review pass).")
     p_load.add_argument("--database-url", required=True, help="Postgres connection string, e.g. $DATABASE_URL.")
     p_load.set_defaults(func=cmd_load)
+
+    p_stage = sub.add_parser("stage", help="Push aggregate's output into menu_item_drafts for web review at /review (pending, not live yet).")
+    p_stage.add_argument("--input", required=True, help="Folder containing menu_items_seed.json (the aggregate step's output).")
+    p_stage.add_argument("--database-url", required=True, help="Postgres connection string, e.g. $DATABASE_URL.")
+    p_stage.set_defaults(func=cmd_stage)
+
+    p_promote = sub.add_parser("promote", help="Upsert every approved/edited menu_item_drafts row into the live menu_items table.")
+    p_promote.add_argument("--database-url", required=True, help="Postgres connection string, e.g. $DATABASE_URL.")
+    p_promote.set_defaults(func=cmd_promote)
 
     args = parser.parse_args()
     args.func(args)

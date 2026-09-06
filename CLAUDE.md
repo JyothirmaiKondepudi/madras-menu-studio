@@ -4,13 +4,13 @@ Read this fully at the start of every session; it's meant to replace re-explaini
 
 ## What this is
 
-An internal tool for Madras Catering to generate three non-repeating, priced menu options per event occasion (welcome dinner, breakfast, mehndi, sangeet, wedding lunch, cocktail hour, dinner reception, late-night snacks, etc.), across multi-day events that may blend cuisines (e.g. a Jaipuri–Hyderabadi fusion wedding). Replaces ad-hoc menu building from ~128 historical Word/PDF docs with a structured wizard + database.
+An internal tool for Madras Catering to generate three non-repeating, priced menu options per event occasion (welcome dinner, breakfast, mehndi, sangeet, wedding lunch, cocktail hour, dinner reception, late-night snacks, etc.), across multi-day events that may blend cuisines (e.g. a Jaipuri–Hyderabadi fusion wedding). Replaces ad-hoc menu building from a historical Word/PDF archive with a structured wizard + database. That archive (`menus-source/`, gitignored — proprietary business content) turned out to be ~2,100 raw files spanning 2004–2026, not the ~128 originally assumed; see `menu_etl_pipeline.py`'s `curate` stage, which strips junk/exact-duplicates/non-menu-category docs down to a curated set (~1,730 as of Sept 2026) before `extract` ever spends an API call on one.
 
 ## Stack (decided — don't re-litigate without asking)
 
 Next.js (React + TypeScript), single monolith — frontend and API routes together, no separate Express backend. Prisma as the ORM. Postgres, via a serverless-pooled provider (Neon or Supabase) — required because Prisma + serverless functions exhausts connections without pooling. Hosted on Vercel. Auth via Auth.js (NextAuth) with its Prisma adapter — magic-link or Google OAuth, no custom password handling.
 
-Data ingestion is a separate, one-time/periodic Python pipeline (`menu_etl_pipeline.py`, three stages: `extract` → `aggregate` → `load`), not part of the running app. It uses an LLM (Claude) for structuring the inconsistent source docs — **no dbt, no RAG index** for this; both were considered and rejected as more infrastructure than this data volume needs. See that file's own docstring for how it works.
+Data ingestion is a separate, one-time/periodic Python pipeline (`menu_etl_pipeline.py`, four stages: `curate` → `extract` → `aggregate` → `load`), not part of the running app. `extract` is the only stage that costs an LLM call per doc (Claude, for structuring the inconsistent source docs) — **no dbt, no RAG index** for this; both were considered and rejected as more infrastructure than this data volume needs. See that file's own docstring for how it works.
 
 ## Domain model
 
